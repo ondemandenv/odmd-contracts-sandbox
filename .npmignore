@@ -1,0 +1,26 @@
+*.ts
+!*.d.ts
+
+test
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+bin
+.idea
+.git
+.github
+
+node_modules
+
+build.gradle.kts
+cdk.context.json
+cdk.json
+gradlew
+gradlew.bat
+package.json
+package.template.json
+package-lock.json
+tsconfig.json
