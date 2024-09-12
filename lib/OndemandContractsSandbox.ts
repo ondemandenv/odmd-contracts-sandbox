@@ -14,7 +14,7 @@ import {
     GithubRepo,
     OndemandContracts
 } from "@ondemandenv/contracts-lib-base";
-import {ContractsNpmSbx} from "./repos/_contracts/sandbox-contracts";
+import {OdmdBuildOdmdContractsSbx} from "./repos/_contracts/odmd-build-odmd-contracts-sbx";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -30,8 +30,7 @@ export type AccountsSbx = AccountsCentralView & {
 };
 
 
-export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, ContractsNpmSbx> {
-
+export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, OdmdBuildOdmdContractsSbx> {
 
     public static get myInst(): OndemandContractsSandbox {
         return this.inst as OndemandContractsSandbox;
@@ -39,7 +38,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
 
     constructor(app: App) {
         super(app);
-        this._odmdConfigOdmdContractsNpm = new ContractsNpmSbx(this)
+        this._odmdConfigOdmdContractsNpm = new OdmdBuildOdmdContractsSbx(this)
 
         this.springRdsImg = new OdmdBuildSampleSpringImg(this)
         this.springRdsCdk = new OdmdBuildSampleSpringCdk(this)
@@ -83,8 +82,8 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     }
 
 
-    private _odmdConfigOdmdContractsNpm: ContractsNpmSbx
-    get odmdConfigOdmdContractsNpm(): ContractsNpmSbx {
+    private _odmdConfigOdmdContractsNpm: OdmdBuildOdmdContractsSbx
+    get odmdConfigOdmdContractsNpm(): OdmdBuildOdmdContractsSbx {
         return this._odmdConfigOdmdContractsNpm
     }
 
