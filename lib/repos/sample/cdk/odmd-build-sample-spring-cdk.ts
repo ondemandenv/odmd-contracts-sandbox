@@ -7,14 +7,13 @@ import {ContractsBuild, ContractsEnverCdk} from "@ondemandenv/contracts-lib-base
 
 export class OdmdBuildSampleSpringCdk extends ContractsBuild<ContractsEnverCdk> {
 
-    gitHubRepo = OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds
 
     ownerEmail?: string | undefined;
 
     readonly envers: Array<ContractsEnverCdk>;
 
     constructor(scope: Construct) {
-        super(scope, 'spring-rds-cdk');
+        super(scope, 'spring-rds-cdk', OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds);
         this.deployToSelfDefinedEcs = new OdmdEnverSampleSpringCdkEcs(this)
         this.kubectlToEksClaster = new OdmdEnverSampleSpringCdkKubeEks(this)
         this.envers = [this.deployToSelfDefinedEcs, this.kubectlToEksClaster]

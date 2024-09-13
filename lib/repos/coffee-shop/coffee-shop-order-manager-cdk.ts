@@ -35,11 +35,10 @@ export class CoffeeShopOrderManagerCdk extends ContractsBuild<ContractsEnverCdk>
     readonly envers: Array<CoffeeShopOrderManagerEnver>
 
 
-    gitHubRepo = OndemandContractsSandbox.myInst.githubRepos.CoffeeShopOrderManagerCdk
     ownerEmail?: string | undefined;
 
     constructor(scope: Construct) {
-        super(scope, 'coffeeShopOrderManager');
+        super(scope, 'coffeeShopOrderManager', OndemandContractsSandbox.myInst.githubRepos.CoffeeShopOrderManagerCdk);
         const coffeeF = OndemandContractsSandbox.myInst.coffeeShopFoundationCdk.theOne
         this.envers = [new CoffeeShopOrderManagerEnver(this, coffeeF.targetAWSAccountID, coffeeF.targetAWSRegion,
             new SRC_Rev_REF('b', 'master'))]

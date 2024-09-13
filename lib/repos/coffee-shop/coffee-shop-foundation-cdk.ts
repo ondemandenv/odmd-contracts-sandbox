@@ -43,11 +43,10 @@ export class CoffeeShopFoundationCdk extends ContractsBuild<ContractsEnverCdk> {
 
     readonly theOne
 
-    gitHubRepo = OndemandContractsSandbox.myInst.githubRepos.CoffeeShopFoundationCdk
     ownerEmail?: string | undefined;
 
     constructor(scope: Construct) {
-        super(scope, 'coffee-shop-foundation');
+        super(scope, 'coffee-shop-foundation', OndemandContractsSandbox.myInst.githubRepos.CoffeeShopFoundationCdk);
         this.theOne = new CoffeeShopFoundationEnver(this, OndemandContractsSandbox.myInst.accounts.workspace1, 'us-west-1',
             new SRC_Rev_REF('b', 'master'));
         this.envers = [this.theOne]

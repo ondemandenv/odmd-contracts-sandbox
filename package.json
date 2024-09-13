@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -13,7 +13,7 @@
     "aws-cdk-lib": "2.154.1",
     "constructs": "^10.0.0",
     "js-yaml": "^4.1.0",
-    "@ondemandenv/contracts-lib-base": "0.0.6"
+    "@ondemandenv/contracts-lib-base": "0.0.9"
   },
   "devDependencies": {
     "aws-cdk": "2.154.1",

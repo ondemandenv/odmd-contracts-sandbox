@@ -24,8 +24,8 @@ export class OdmdEnverSampleSpringCdkKubeEks extends ContractsEnverCdk implement
     constructor(param: OdmdBuildSampleSpringCdk) {
         super(param, OndemandContractsSandbox.myInst.accounts.workspace0, "us-west-1", new SRC_Rev_REF("b", "p0dmdSbxUsw1"))
 
-        const vpcRds = OndemandContractsSandbox.myInst.defaultVpcRds.getOrCreateOne(this, {
-            ipamEnver: OndemandContractsSandbox.myInst.networking.ipam_west1_le,
+        const vpcRds = OndemandContractsSandbox.myInst.defaultVpcRds!.getOrCreateOne(this, {
+            ipamEnver: OndemandContractsSandbox.myInst.networking!.ipam_west1_le,
             vpcName: 'springcdkecs'
         })
         this.vpcConfig = vpcRds.vpcConfig

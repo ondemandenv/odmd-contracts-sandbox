@@ -1,12 +1,9 @@
-
 import {Construct} from "constructs";
 import {OdmdEnverSampleSpringImg} from "./odmd-enver-sample-spring-img";
 import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
 import {ContractsBuild, ContractsEnverCtnImg} from "@ondemandenv/contracts-lib-base";
 
 export class OdmdBuildSampleSpringImg extends ContractsBuild<ContractsEnverCtnImg> {
-
-    gitHubRepo =  OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds
 
     ownerEmail?: string | undefined;
 
@@ -15,7 +12,7 @@ export class OdmdBuildSampleSpringImg extends ContractsBuild<ContractsEnverCtnIm
     readonly enverImg: OdmdEnverSampleSpringImg
 
     constructor(scope: Construct) {
-        super(scope, 'spring-rds-img');
+        super(scope, 'spring-rds-img', OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds);
         this.enverImg = new OdmdEnverSampleSpringImg(this)
         this.envers = [
             this.enverImg

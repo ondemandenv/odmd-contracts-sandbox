@@ -41,8 +41,8 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
             userName: 'cdkecs_readonly1'
         };
 
-        this.vpcRdsProvidingEnver = OndemandContractsSandbox.myInst.defaultVpcRds.getOrCreateOne(this, {
-            ipamEnver: OndemandContractsSandbox.myInst.networking.ipam_west1_le,
+        this.vpcRdsProvidingEnver = OndemandContractsSandbox.myInst.defaultVpcRds!.getOrCreateOne(this, {
+            ipamEnver: OndemandContractsSandbox.myInst.networking!.ipam_west1_le,
             vpcName: 'springcdkecs'
         })
 

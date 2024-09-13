@@ -38,11 +38,10 @@ export class SampleSpringOpenApi3Cdk extends ContractsBuild<ContractsEnverCdk> {
 
     workDirs = ['cdk']
 
-    gitHubRepo = OndemandContractsSandbox.myInst.githubRepos.sampleApiEcs
     ownerEmail?: string | undefined;
 
     constructor(scope: Construct) {
-        super(scope, 'sampleSpringOpenAPI3cdk');
+        super(scope, 'sampleSpringOpenAPI3cdk', OndemandContractsSandbox.myInst.githubRepos.sampleApiEcs);
         this.theMaster = new SampleSpringOpenApi3CdkEnver(this,
             OndemandContractsSandbox.myInst.accounts.workspace1, 'us-west-1',
             new SRC_Rev_REF('b', 'master')
