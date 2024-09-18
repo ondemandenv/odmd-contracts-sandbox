@@ -119,6 +119,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     get githubRepos(): GithubReposSbx {
         if (!this._githubRepos) {
             this._githubRepos = {
+                githubAppId: "377358",
                 __eks: {
                     owner: 'ondemandenv',
                     name: 'odmd-eks',
