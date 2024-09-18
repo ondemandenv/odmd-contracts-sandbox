@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -13,7 +13,7 @@
     "aws-cdk-lib": "2.154.1",
     "constructs": "^10.0.0",
     "js-yaml": "^4.1.0",
-    "@ondemandenv/contracts-lib-base": "0.0.9"
+    "@ondemandenv/contracts-lib-base": "0.0.11"
   },
   "devDependencies": {
     "aws-cdk": "2.154.1",
@@ -41,7 +41,7 @@
     "test": "tsc --build --clean && tsc --build && cross-env target_rev_ref=b..odmdSbxUsw1 CDK_DEFAULT_ACCOUNT=123 CDK_DEFAULT_REGION=us-west-1 CDK_CLI_VERSION=2.154.1  jest",
     "buildversion": "tsc --build && npm version patch",
     "cdk-ls": "tsc --build --clean && tsc --build && cross-env target_build_id=spring-rds-img target_rev_ref=b..odmdSbxUsw1 cdk ls --profile sandbox-workspace2",
-    "pubpub": "npm run test && npm publish --access=public",
+    "pubpub": "npm run cdk-ls && npm publish --access=public",
     "login": "npm login",
     "cdk8s-import": "cdk8s import/* && ts-node imports/remove-readonly.ts*/"
   }
