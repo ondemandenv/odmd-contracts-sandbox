@@ -34,9 +34,9 @@ export class SampleSpringOpenApi3Img extends ContractsBuild<ContractsEnverCtnImg
 
     ownerEmail?: string | undefined;
 
-    constructor(scope: Construct) {
-        super(scope, 'sampleSpringOpenAPI3img', OndemandContractsSandbox.myInst.githubRepos.sampleApiEcs);
-        this.theOne = new SampleSpringOpenApi3ImgEnver(this, OndemandContractsSandbox.myInst.accounts.workspace1,
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'sampleSpringOpenAPI3img', scope.githubRepos.sampleApiEcs);
+        this.theOne = new SampleSpringOpenApi3ImgEnver(this, scope.accounts.workspace1,
             'us-west-1', new SRC_Rev_REF('b', 'master')
         )
         this.envers = [this.theOne]

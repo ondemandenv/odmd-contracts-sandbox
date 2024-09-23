@@ -11,11 +11,14 @@ export class OdmdBuildSampleSpringImg extends ContractsBuild<ContractsEnverCtnIm
 
     readonly enverImg: OdmdEnverSampleSpringImg
 
-    constructor(scope: Construct) {
-        super(scope, 'spring-rds-img', OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds);
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'spring-rds-img', scope.githubRepos.sampleVpcRds);
         this.enverImg = new OdmdEnverSampleSpringImg(this)
         this.envers = [
             this.enverImg
         ]
+    }
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
     }
 }

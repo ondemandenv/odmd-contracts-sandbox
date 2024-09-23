@@ -5,16 +5,15 @@ import {
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {Construct} from "constructs";
 
 export class SampleSpringOpenApi3CdkEnver extends ContractsEnverCdk {
-    constructor(owner: ContractsBuild<ContractsEnverCdk>, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
+    constructor(owner: SampleSpringOpenApi3Cdk, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
         this.appImgRepoRef = new ContractsCrossRefConsumer(this, 'appImgRefProducer',
-            OndemandContractsSandbox.myInst.springOpen3Img.theOne.ctnImgRefProducer)
+            owner.contracts.springOpen3Img.theOne.ctnImgRefProducer)
 
         this.appImgLatestRef = new ContractsCrossRefConsumer(this, 'appLatestRefProducer',
-            OndemandContractsSandbox.myInst.springOpen3Img.theOne.ctnImgRefProducer.latestSha)
+            owner.contracts.springOpen3Img.theOne.ctnImgRefProducer.latestSha)
         this.apiEndpoint = new ContractsCrossRefProducer<SampleSpringOpenApi3CdkEnver>(this, 'endpoint', {
             children: [
                 {pathPart: 'api-doc'},
@@ -40,14 +39,18 @@ export class SampleSpringOpenApi3Cdk extends ContractsBuild<ContractsEnverCdk> {
 
     ownerEmail?: string | undefined;
 
-    constructor(scope: Construct) {
-        super(scope, 'sampleSpringOpenAPI3cdk', OndemandContractsSandbox.myInst.githubRepos.sampleApiEcs);
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'sampleSpringOpenAPI3cdk', scope.githubRepos.sampleApiEcs);
         this.theMaster = new SampleSpringOpenApi3CdkEnver(this,
-            OndemandContractsSandbox.myInst.accounts.workspace1, 'us-west-1',
+            scope.accounts.workspace1, 'us-west-1',
             new SRC_Rev_REF('b', 'master')
         )
 
         this.envers = [this.theMaster]
+    }
+
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
     }
 
 }

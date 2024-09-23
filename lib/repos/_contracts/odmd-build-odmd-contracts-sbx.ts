@@ -5,36 +5,37 @@ import {
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {Construct} from "constructs";
-import {AccountsSbx, GithubReposSbx} from "../../OndemandContractsSandbox";
+import {AccountsSbx, GithubReposSbx, OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 
 export class OdmdBuildOdmdContractsSbx extends OdmdBuildOdmdContracts<AccountsSbx, GithubReposSbx> {
     ownerEmail?: string | undefined;
     envers: ContractsEnverNpm[];
     readonly theOne: ContractsEnverNpm
+    readonly latestParamPath: string
 
     public get packageName(): string {
         return '@ondemandenv/odmd-contracts-sandbox'
     }
 
-    constructor(scope: Construct) {
+    constructor(scope:OndemandContractsSandbox) {
         super(scope, 'odmd-contracts-npm');
 
-        const srcRevREF = new SRC_Rev_REF("b", "odmd_us_west_1__sandbox");
         this.theOne = new ContractsEnverNpm(
             this,
-            OndemandContracts.inst.accounts.workspace0,
+            scope.accounts.workspace0,
             'us-west-1',
-            srcRevREF
+            new SRC_Rev_REF("b", "odmd_us_west_1__sandbox")
         );
         this.envers = [this.theOne];
 
 
-        const PKG_VER = `PKG_VER=$(jq -r '.version' package.json)`;
 
         /*
         /odmd-contracts-latest-version/ondemandenv/odmd-app-contracts/odmd_us_west_1__sandbox
        */
-        const paramPath = `/odmd-contracts-latest-version/${this.gitHubRepo.owner}/${this.gitHubRepo.name}/${srcRevREF.value}`
+        this.latestParamPath = `/odmd-contracts-latest-version/${this.gitHubRepo.owner}/${this.gitHubRepo.name}/${this.theOne.targetRevision.value}`
+
+        const PKG_VER = `PKG_VER=$(jq -r '.version' package.json)`;
         this.theOne.buildCmds.push(
             `PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != "${this.packageName}" || echo $PKG_NAME is good`,
             `npm install`,
@@ -65,7 +66,7 @@ aws ssm put-parameter --name "MyParameter" --value "MyValue" --type "String" --o
 && export AWS_ACCESS_KEY_ID=$(echo $assume_role_output | jq -r '.Credentials.AccessKeyId') \
 && export AWS_SECRET_ACCESS_KEY=$(echo $assume_role_output | jq -r '.Credentials.SecretAccessKey') \
 && export AWS_SESSION_TOKEN=$(echo $assume_role_output | jq -r '.Credentials.SessionToken') \
-&& aws ssm put-parameter --name ${paramPath} --type String --value "$GITHUB_SHA\n${this.packageName}:$PKG_VER" --overwrite`
+&& aws ssm put-parameter --name ${this.latestParamPath} --type String --value "$GITHUB_SHA\n${this.packageName}:$PKG_VER" --overwrite`
         )
     }
 }

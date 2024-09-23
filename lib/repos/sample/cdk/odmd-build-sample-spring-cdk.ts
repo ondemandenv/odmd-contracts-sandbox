@@ -1,5 +1,3 @@
-
-import {Construct} from "constructs";
 import {OdmdEnverSampleSpringCdkEcs} from "./odmd-enver-sample-spring-cdk-ecs";
 import {OdmdEnverSampleSpringCdkKubeEks} from "./odmd-enver-sample-spring-cdk-kube-eks";
 import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
@@ -12,8 +10,8 @@ export class OdmdBuildSampleSpringCdk extends ContractsBuild<ContractsEnverCdk> 
 
     readonly envers: Array<ContractsEnverCdk>;
 
-    constructor(scope: Construct) {
-        super(scope, 'spring-rds-cdk', OndemandContractsSandbox.myInst.githubRepos.sampleVpcRds);
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'spring-rds-cdk', scope.githubRepos.sampleVpcRds);
         this.deployToSelfDefinedEcs = new OdmdEnverSampleSpringCdkEcs(this)
         this.kubectlToEksClaster = new OdmdEnverSampleSpringCdkKubeEks(this)
         this.envers = [this.deployToSelfDefinedEcs, this.kubectlToEksClaster]
@@ -23,4 +21,9 @@ export class OdmdBuildSampleSpringCdk extends ContractsBuild<ContractsEnverCdk> 
     public readonly kubectlToEksClaster: OdmdEnverSampleSpringCdkKubeEks
 
     workDirs?: string[] = ['cdk']
+
+
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
+    }
 }

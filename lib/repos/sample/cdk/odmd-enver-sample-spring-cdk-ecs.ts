@@ -33,7 +33,7 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
     readonly appImgName: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
 
     constructor(owner: OdmdBuildSampleSpringCdk) {
-        super(owner, OndemandContractsSandbox.myInst.accounts.workspace1, "us-west-1", new SRC_Rev_REF("b", "odmdSbxUsw1"));
+        super(owner, owner.contracts.accounts.workspace1, "us-west-1", new SRC_Rev_REF("b", "odmdSbxUsw1"));
 
 
         this.readOnlyPub = {
@@ -41,8 +41,8 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
             userName: 'cdkecs_readonly1'
         };
 
-        this.vpcRdsProvidingEnver = OndemandContractsSandbox.myInst.defaultVpcRds!.getOrCreateOne(this, {
-            ipamEnver: OndemandContractsSandbox.myInst.networking!.ipam_west1_le,
+        this.vpcRdsProvidingEnver = owner.contracts.defaultVpcRds!.getOrCreateOne(this, {
+            ipamEnver: owner.contracts.networking!.ipam_west1_le,
             vpcName: 'springcdkecs'
         })
 
@@ -59,7 +59,7 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
         this.rdsUsrReadOnly = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsUsrReadOnly', this.rdsConfig.usernameToSecretId.get(this.readOnlyPub.userName)!)
 
         this.preCdkCmds.push('npm run build')
-        this.imgSrcEnver = OndemandContractsSandbox.myInst.springRdsImg.enverImg;
+        this.imgSrcEnver = owner.contracts.springRdsImg.enverImg;
 
         this.migImgName = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'migImgName', this.imgSrcEnver.migImgRefProducer)
         this.appImgName = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'appImgName', this.imgSrcEnver.appImgRefProducer)

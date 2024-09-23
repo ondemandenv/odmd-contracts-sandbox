@@ -6,15 +6,14 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import {CoffeeShopFoundationEnver} from "./coffee-shop-foundation-cdk";
-import {Construct} from "constructs";
 
 export class CoffeeShopOrderManagerEnver extends ContractsEnverCdk {
-    constructor(owner: ContractsBuild<ContractsEnverCdk>, targetAWSAccountID: string,
+    constructor(owner: CoffeeShopOrderManagerCdk, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
 
-        const foundationCdk = OndemandContractsSandbox.myInst.coffeeShopFoundationCdk.theOne;
+        const foundationCdk = owner.contracts.coffeeShopFoundationCdk.theOne;
         this.eventBus = new ContractsCrossRefConsumer(this, 'eventBus', foundationCdk.eventBusSrc);
         this.eventSrc = new ContractsCrossRefConsumer(this, 'eventSrc', foundationCdk.eventBusSrc.source);
         this.configTableName = new ContractsCrossRefConsumer(this, 'configTableName', foundationCdk.configTableName);
@@ -37,11 +36,15 @@ export class CoffeeShopOrderManagerCdk extends ContractsBuild<ContractsEnverCdk>
 
     ownerEmail?: string | undefined;
 
-    constructor(scope: Construct) {
-        super(scope, 'coffeeShopOrderManager', OndemandContractsSandbox.myInst.githubRepos.CoffeeShopOrderManagerCdk);
-        const coffeeF = OndemandContractsSandbox.myInst.coffeeShopFoundationCdk.theOne
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'coffeeShopOrderManager', scope.githubRepos.CoffeeShopOrderManagerCdk);
+        const coffeeF = scope.coffeeShopFoundationCdk.theOne
         this.envers = [new CoffeeShopOrderManagerEnver(this, coffeeF.targetAWSAccountID, coffeeF.targetAWSRegion,
             new SRC_Rev_REF('b', 'master'))]
     }
 
+
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
+    }
 }

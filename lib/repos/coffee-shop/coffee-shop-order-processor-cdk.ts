@@ -6,15 +6,14 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import {CoffeeShopFoundationEnver} from "./coffee-shop-foundation-cdk";
-import {Construct} from "constructs";
 
 export class CoffeeShopOrderProcessorEnver extends ContractsEnverCdk {
-    constructor(owner: ContractsBuild<ContractsEnverCdk>, targetAWSAccountID: string,
+    constructor(owner: CoffeeShopOrderProcessorCdk, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
 
-        const foundationCdk = OndemandContractsSandbox.myInst.coffeeShopFoundationCdk.theOne;
+        const foundationCdk = owner.contracts.coffeeShopFoundationCdk.theOne;
         this.eventBus = new ContractsCrossRefConsumer(this, 'eventBus', foundationCdk.eventBusSrc);
         this.eventSrc = new ContractsCrossRefConsumer(this, 'eventSrc', foundationCdk.eventBusSrc.source);
         this.configTableName = new ContractsCrossRefConsumer(this, 'configTableName', foundationCdk.configTableName);
@@ -36,11 +35,14 @@ export class CoffeeShopOrderProcessorCdk extends ContractsBuild<ContractsEnverCd
 
     ownerEmail?: string | undefined;
 
-    constructor(scope: Construct) {
-        super(scope, 'coffeeShopOrderProcessor', OndemandContractsSandbox.myInst.githubRepos.CoffeeShopOrderProcessorCdk);
-        const coffeeF = OndemandContractsSandbox.myInst.coffeeShopFoundationCdk.theOne
+    constructor(scope: OndemandContractsSandbox) {
+        super(scope, 'coffeeShopOrderProcessor', scope.githubRepos.CoffeeShopOrderProcessorCdk);
+        const coffeeF = scope.coffeeShopFoundationCdk.theOne
         this.envers = [new CoffeeShopOrderProcessorEnver(this, coffeeF.targetAWSAccountID, coffeeF.targetAWSRegion,
             new SRC_Rev_REF('b', 'master'))]
+    }
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
     }
 
 }

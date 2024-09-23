@@ -32,12 +32,18 @@ export type AccountsSbx = AccountsCentralView & {
 
 export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, OdmdBuildOdmdContractsSbx> {
 
-    public static get myInst(): OndemandContractsSandbox {
-        return this.inst as OndemandContractsSandbox;
+    private static _inst: OndemandContractsSandbox
+    public static get inst(): OndemandContractsSandbox {
+        return this._inst
     }
 
     constructor(app: App) {
-        super(app);
+        super(app, 'OndemandContractsSandbox');
+        if (OndemandContractsSandbox._inst) {
+            throw new Error('not allowed')
+        }
+        OndemandContractsSandbox._inst = this;
+
         this._odmdConfigOdmdContractsNpm = new OdmdBuildOdmdContractsSbx(this)
 
         this.springRdsImg = new OdmdBuildSampleSpringImg(this)
