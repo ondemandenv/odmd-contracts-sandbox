@@ -26,7 +26,7 @@ export class OdmdBuildContractsSbx extends OdmdBuildContractsLib<AccountsSbx, Gi
             this,
             scope.accounts.workspace0,
             'us-west-1',
-            new SRC_Rev_REF("b", "odmd_us_west_1__sandbox")
+            new SRC_Rev_REF("b", "main")
         )]
 
 
