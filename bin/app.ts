@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import {OndemandContractsSandbox} from "../lib/OndemandContractsSandbox";
 import {Stack} from "aws-cdk-lib";
-import {AnyContractsEnVer} from "@ondemandenv/contracts-lib-base";
+import {AnyOdmdEnVer} from "@ondemandenv/contracts-lib-base";
 
 
 const app = new cdk.App({autoSynth: false});
@@ -21,7 +21,7 @@ async function main() {
     const csa = app.synth();
 
 
-    const targetEnver = OndemandContractsSandbox.inst.getTargetEnver() as AnyContractsEnVer
+    const targetEnver = OndemandContractsSandbox.inst.getTargetEnver() as AnyOdmdEnVer
 
     console.log("targetEnver>" + targetEnver)
 

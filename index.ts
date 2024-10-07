@@ -1,5 +1,5 @@
 export * from './lib/OndemandContractsSandbox'
-export * from './lib/repos/_contracts/odmd-build-odmd-contracts-sbx'
+export * from './lib/repos/_contracts/odmd-build-contracts-sbx'
 export * from './lib/repos/sample/cdk/odmd-build-sample-spring-cdk'
 export * from './lib/repos/sample/cdk/odmd-enver-sample-spring-cdk-ecs'
 export * from './lib/repos/sample/cdk/odmd-enver-sample-spring-cdk-kube-eks'

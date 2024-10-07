@@ -1,22 +1,21 @@
 import {
-    AnyContractsEnVer,
-    BorrowVpcRds, ContractsCrossRefConsumer,
-    ContractsEnverCdk,
-    ContractsEnverCdkDefaultVpc, ContractsRdsCluster,
-    ContractsVpc, PgSchemaUsersProps, PgUsr, SRC_Rev_REF,
+    AnyOdmdEnVer,
+    BorrowVpcRds, OdmdCrossRefConsumer,
+    OdmdEnverCdk,
+    ContractsEnverCdkDefaultVpc, OdmdRdsCluster,
+    OdmdVpc, PgSchemaUsersProps, PgUsr, SRC_Rev_REF,
     WithRds
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildSampleSpringCdk} from "./odmd-build-sample-spring-cdk";
-import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
 
 
-export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements BorrowVpcRds, WithRds {
+export class OdmdEnverSampleSpringCdkEcs extends OdmdEnverCdk implements BorrowVpcRds, WithRds {
 
 
     readonly vpcRdsProvidingEnver: ContractsEnverCdkDefaultVpc;
 
-    readonly vpcConfig: ContractsVpc
-    readonly rdsConfig: ContractsRdsCluster
+    readonly vpcConfig: OdmdVpc
+    readonly rdsConfig: OdmdRdsCluster
 
     public readonly pgSchemaUsersProps: PgSchemaUsersProps
     public readonly readOnlyPub: PgUsr
@@ -24,13 +23,13 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
 
     readonly imgSrcEnver
 
-    readonly rdsPort: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
-    readonly rdsHost: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
-    readonly rdsSocketAddress: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
-    readonly rdsUsrReadOnly: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
+    readonly rdsPort: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
+    readonly rdsHost: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
+    readonly rdsSocketAddress: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
+    readonly rdsUsrReadOnly: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
 
-    readonly migImgName: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
-    readonly appImgName: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyContractsEnVer>
+    readonly migImgName: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
+    readonly appImgName: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, AnyOdmdEnVer>
 
     constructor(owner: OdmdBuildSampleSpringCdk) {
         super(owner, owner.contracts.accounts.workspace1, "us-west-1", new SRC_Rev_REF("b", "odmdSbxUsw1"));
@@ -53,21 +52,21 @@ export class OdmdEnverSampleSpringCdkEcs extends ContractsEnverCdk implements Bo
         this.pgSchemaUsersProps = new PgSchemaUsersProps(this, 'cdkecs', [this.readOnlyPub]);
         this.vpcRdsProvidingEnver.addSchemaUsers(this.rdsConfig, this.pgSchemaUsersProps)
 
-        this.rdsPort = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsPort', this.rdsConfig.clusterPort)
-        this.rdsHost = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsHost', this.rdsConfig.clusterHostname)
-        this.rdsSocketAddress = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsSocketAddress', this.rdsConfig.clusterSocketAddress)
-        this.rdsUsrReadOnly = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsUsrReadOnly', this.rdsConfig.usernameToSecretId.get(this.readOnlyPub.userName)!)
+        this.rdsPort = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsPort', this.rdsConfig.clusterPort)
+        this.rdsHost = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsHost', this.rdsConfig.clusterHostname)
+        this.rdsSocketAddress = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsSocketAddress', this.rdsConfig.clusterSocketAddress)
+        this.rdsUsrReadOnly = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsUsrReadOnly', this.rdsConfig.usernameToSecretId.get(this.readOnlyPub.userName)!)
 
         this.preCdkCmds.push('npm run build')
         this.imgSrcEnver = owner.contracts.springRdsImg.enverImg;
 
-        this.migImgName = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'migImgName', this.imgSrcEnver.migImgRefProducer)
-        this.appImgName = new ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'appImgName', this.imgSrcEnver.appImgRefProducer)
+        this.migImgName = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'migImgName', this.imgSrcEnver.migImgRefProducer)
+        this.appImgName = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'appImgName', this.imgSrcEnver.appImgRefProducer)
 
         const imgToRepoProducers = this.imgSrcEnver.builtImgNameToRepoProducer;
 
         for (const imgName in imgToRepoProducers) {
-            new ContractsCrossRefConsumer(this, imgName, imgToRepoProducers[imgName])
+            new OdmdCrossRefConsumer(this, imgName, imgToRepoProducers[imgName])
         }
     }
 

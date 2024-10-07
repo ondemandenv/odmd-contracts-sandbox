@@ -1,13 +1,12 @@
 import {
-    ContractsBuild,
-    ContractsCrossRefProducer,
-    ContractsEnverCdk,
+    OdmdBuild,
+    OdmdCrossRefProducer,
+    OdmdEnverCdk,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {Construct} from "constructs";
 
-export class EvBusSrcRefProducer extends ContractsCrossRefProducer<CoffeeShopFoundationEnver> {
+export class EvBusSrcRefProducer extends OdmdCrossRefProducer<CoffeeShopFoundationEnver> {
 
     constructor(owner: CoffeeShopFoundationEnver, id: string) {
         super(owner, id, {
@@ -20,8 +19,8 @@ export class EvBusSrcRefProducer extends ContractsCrossRefProducer<CoffeeShopFou
     }
 }
 
-export class CoffeeShopFoundationEnver extends ContractsEnverCdk {
-    constructor(owner: ContractsBuild<ContractsEnverCdk>, targetAWSAccountID: string,
+export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
+    constructor(owner: OdmdBuild<OdmdEnverCdk>, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
         this.eventBusSrc = new EvBusSrcRefProducer(this, 'bus-src')
@@ -32,12 +31,12 @@ export class CoffeeShopFoundationEnver extends ContractsEnverCdk {
     }
 
     readonly eventBusSrc: EvBusSrcRefProducer;
-    readonly configTableName: ContractsCrossRefProducer<CoffeeShopFoundationEnver>;
-    readonly countTableName: ContractsCrossRefProducer<CoffeeShopFoundationEnver>;
+    readonly configTableName: OdmdCrossRefProducer<CoffeeShopFoundationEnver>;
+    readonly countTableName: OdmdCrossRefProducer<CoffeeShopFoundationEnver>;
 
 }
 
-export class CoffeeShopFoundationCdk extends ContractsBuild<ContractsEnverCdk> {
+export class CoffeeShopFoundationCdk extends OdmdBuild<OdmdEnverCdk> {
 
     readonly envers: Array<CoffeeShopFoundationEnver>
 

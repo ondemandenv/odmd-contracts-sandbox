@@ -1,14 +1,14 @@
 import {OdmdEnverSampleSpringCdkEcs} from "./odmd-enver-sample-spring-cdk-ecs";
 import {OdmdEnverSampleSpringCdkKubeEks} from "./odmd-enver-sample-spring-cdk-kube-eks";
 import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
-import {ContractsBuild, ContractsEnverCdk} from "@ondemandenv/contracts-lib-base";
+import {OdmdBuild, OdmdEnverCdk} from "@ondemandenv/contracts-lib-base";
 
-export class OdmdBuildSampleSpringCdk extends ContractsBuild<ContractsEnverCdk> {
+export class OdmdBuildSampleSpringCdk extends OdmdBuild<OdmdEnverCdk> {
 
 
     ownerEmail?: string | undefined;
 
-    readonly envers: Array<ContractsEnverCdk>;
+    readonly envers: Array<OdmdEnverCdk>;
 
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'spring-rds-cdk', scope.githubRepos.sampleVpcRds);

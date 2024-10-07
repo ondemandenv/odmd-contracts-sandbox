@@ -14,7 +14,7 @@ import {
     GithubRepo,
     OndemandContracts
 } from "@ondemandenv/contracts-lib-base";
-import {OdmdBuildOdmdContractsSbx} from "./repos/_contracts/odmd-build-odmd-contracts-sbx";
+import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -27,10 +27,14 @@ export type GithubReposSbx = GithubReposCentralView & {
 
 export type AccountsSbx = AccountsCentralView & {
     workspace1: string,
-};
+}
 
 
-export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, OdmdBuildOdmdContractsSbx> {
+export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, OdmdBuildContractsSbx> {
+
+    createContractsLibBuild(): OdmdBuildContractsSbx {
+        return new OdmdBuildContractsSbx(this)
+    }
 
     private static _inst: OndemandContractsSandbox
     public static get inst(): OndemandContractsSandbox {
@@ -43,8 +47,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
             throw new Error('not allowed')
         }
         OndemandContractsSandbox._inst = this;
-
-        this._odmdConfigOdmdContractsNpm = new OdmdBuildOdmdContractsSbx(this)
 
         this.springRdsImg = new OdmdBuildSampleSpringImg(this)
         this.springRdsCdk = new OdmdBuildSampleSpringCdk(this)
@@ -85,12 +87,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         if (!buildRegion || !buildAccount) {
             throw new Error("buildRegion>" + buildRegion + "; buildAccount>" + buildAccount)
         }
-    }
-
-
-    private _odmdConfigOdmdContractsNpm: OdmdBuildOdmdContractsSbx
-    get odmdConfigOdmdContractsNpm(): OdmdBuildOdmdContractsSbx {
-        return this._odmdConfigOdmdContractsNpm
     }
 
 

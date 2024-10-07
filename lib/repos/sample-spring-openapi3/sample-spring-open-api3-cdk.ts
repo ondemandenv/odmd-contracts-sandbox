@@ -1,20 +1,20 @@
 import {
-    ContractsBuild,
-    ContractsCrossRefConsumer, ContractsCrossRefProducer,
-    ContractsEnverCdk, ContractsEnverCtnImg,
+    OdmdBuild,
+    OdmdCrossRefConsumer, OdmdCrossRefProducer,
+    OdmdEnverCdk, OdmdEnverCtnImg,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 
-export class SampleSpringOpenApi3CdkEnver extends ContractsEnverCdk {
+export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk {
     constructor(owner: SampleSpringOpenApi3Cdk, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
-        this.appImgRepoRef = new ContractsCrossRefConsumer(this, 'appImgRefProducer',
+        this.appImgRepoRef = new OdmdCrossRefConsumer(this, 'appImgRefProducer',
             owner.contracts.springOpen3Img.theOne.ctnImgRefProducer)
 
-        this.appImgLatestRef = new ContractsCrossRefConsumer(this, 'appLatestRefProducer',
+        this.appImgLatestRef = new OdmdCrossRefConsumer(this, 'appLatestRefProducer',
             owner.contracts.springOpen3Img.theOne.ctnImgRefProducer.latestSha)
-        this.apiEndpoint = new ContractsCrossRefProducer<SampleSpringOpenApi3CdkEnver>(this, 'endpoint', {
+        this.apiEndpoint = new OdmdCrossRefProducer<SampleSpringOpenApi3CdkEnver>(this, 'endpoint', {
             children: [
                 {pathPart: 'api-doc'},
                 {pathPart: 'swagger-ui'}
@@ -22,13 +22,13 @@ export class SampleSpringOpenApi3CdkEnver extends ContractsEnverCdk {
         })
     }
 
-    readonly appImgRepoRef: ContractsCrossRefConsumer<SampleSpringOpenApi3CdkEnver, ContractsEnverCtnImg>
-    readonly appImgLatestRef: ContractsCrossRefConsumer<SampleSpringOpenApi3CdkEnver, ContractsEnverCtnImg>
-    readonly apiEndpoint: ContractsCrossRefProducer<SampleSpringOpenApi3CdkEnver>;
+    readonly appImgRepoRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
+    readonly appImgLatestRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
+    readonly apiEndpoint: OdmdCrossRefProducer<SampleSpringOpenApi3CdkEnver>;
 
 }
 
-export class SampleSpringOpenApi3Cdk extends ContractsBuild<ContractsEnverCdk> {
+export class SampleSpringOpenApi3Cdk extends OdmdBuild<OdmdEnverCdk> {
 
     readonly envers: Array<SampleSpringOpenApi3CdkEnver>
 

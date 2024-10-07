@@ -1,25 +1,24 @@
 import {
-    ContractsCrossRefConsumer,
-    ContractsEnverCdk, ContractsEnverCtnImg,
-    ContractsRdsCluster,
-    ContractsVpc, SRC_Rev_REF,
+    OdmdCrossRefConsumer,
+    OdmdEnverCdk, OdmdEnverCtnImg,
+    OdmdRdsCluster,
+    OdmdVpc, SRC_Rev_REF,
     WithRds
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildSampleSpringCdk} from "./odmd-build-sample-spring-cdk";
-import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
 
 
 /**
  * so that the cdk code to use EksManifest which takes KubeCtlThruVpc as param
  */
-export class OdmdEnverSampleSpringCdkKubeEks extends ContractsEnverCdk implements WithRds {
+export class OdmdEnverSampleSpringCdkKubeEks extends OdmdEnverCdk implements WithRds {
 
 
-    vpcConfig: ContractsVpc
-    rdsConfig: ContractsRdsCluster
+    vpcConfig: OdmdVpc
+    rdsConfig: OdmdRdsCluster
 
-    readonly appImg: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkKubeEks, ContractsEnverCtnImg>
-    readonly migrateImg: ContractsCrossRefConsumer<OdmdEnverSampleSpringCdkKubeEks, ContractsEnverCtnImg>
+    readonly appImg: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkKubeEks, OdmdEnverCtnImg>
+    readonly migrateImg: OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkKubeEks, OdmdEnverCtnImg>
 
     constructor(owner: OdmdBuildSampleSpringCdk) {
         super(owner, owner.contracts.accounts.workspace0, "us-west-1", new SRC_Rev_REF("b", "p0dmdSbxUsw1"))
@@ -31,8 +30,8 @@ export class OdmdEnverSampleSpringCdkKubeEks extends ContractsEnverCdk implement
         this.vpcConfig = vpcRds.vpcConfig
         this.rdsConfig = vpcRds.getOrCreateRdsCluster('sample')
 
-        this.migrateImg = new ContractsCrossRefConsumer(this, 'migImage', owner.contracts.springRdsImg.enverImg.migImgRefProducer);
-        this.appImg = new ContractsCrossRefConsumer(this, 'appContainer', owner.contracts.springRdsImg.enverImg.appImgRefProducer);
+        this.migrateImg = new OdmdCrossRefConsumer(this, 'migImage', owner.contracts.springRdsImg.enverImg.migImgRefProducer);
+        this.appImg = new OdmdCrossRefConsumer(this, 'appContainer', owner.contracts.springRdsImg.enverImg.appImgRefProducer);
 
     }
 

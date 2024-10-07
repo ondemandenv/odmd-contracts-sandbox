@@ -1,15 +1,21 @@
 import {RepositoryProps} from "aws-cdk-lib/aws-ecr";
-import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
 import {
-    ContractsBuild, ContractsCrossRefConsumer,
-    ContractsEnverCtnImg,
-    ContractsRdsCluster,
-    ContractsVpc,
+    OdmdCrossRefConsumer,
+    OdmdEnverCtnImg,
+    OdmdRdsCluster,
+    OdmdVpc,
     CtnImgRefProducer, PgSchemaUsersProps, PgUsr, SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildSampleSpringImg} from "./odmd-build-sample-spring-img";
+import {Stack} from "aws-cdk-lib";
+import {IGrantable} from "aws-cdk-lib/aws-iam";
 
-export class OdmdEnverSampleSpringImg extends ContractsEnverCtnImg {
+export class OdmdEnverSampleSpringImg extends OdmdEnverCtnImg {
+    builtImgNameToRepoGrants: { [imgName: string]: [grantee: IGrantable, ...actions: string[]][]; };
+
+    generateBuildCmds(stack: Stack, ...args: any[]): string[] {
+        return ['chmod +x gradlew && ./gradlew clean build bootBuildImage -x generateGitProperties -x test --info --stacktrace']
+    }
 
     readonly builtImgNameToRepo: {
         [imgName: string]: RepositoryProps//props can be just empty
@@ -27,11 +33,8 @@ export class OdmdEnverSampleSpringImg extends ContractsEnverCtnImg {
     readonly migImgRefProducer: CtnImgRefProducer;
 
 
-    buildCmds: string[] = ['chmod +x gradlew && ./gradlew clean build bootBuildImage -x generateGitProperties -x test --info --stacktrace'];
-
-
-    readonly vpcConfig: ContractsVpc;
-    readonly rdsConfig: ContractsRdsCluster
+    readonly vpcConfig: OdmdVpc;
+    readonly rdsConfig: OdmdRdsCluster
 
     public readonly pgSchemaUsersProps: PgSchemaUsersProps
 
@@ -73,7 +76,7 @@ export class OdmdEnverSampleSpringImg extends ContractsEnverCtnImg {
             this.owner.buildId + '/' + this.targetRevision.toPathPartStr()
         );
 
-        const migrateImg = new ContractsCrossRefConsumer(defaultEcrEks, 'migImage', this.migImgRefProducer);
+        const migrateImg = new OdmdCrossRefConsumer(defaultEcrEks, 'migImage', this.migImgRefProducer);
         defaultEcrEks.job = {
             metadata: {
                 name: "database-migration" + migrateImg.toOdmdRef(),
@@ -82,16 +85,16 @@ export class OdmdEnverSampleSpringImg extends ContractsEnverCtnImg {
                 image: migrateImg.toOdmdRef(),
                 envVariables: {
                     "RDS_user": {value: pgUsrMigrate.userName},
-                    "RDS_secret": {value: new ContractsCrossRefConsumer(defaultEcrEks, 'migSecret', this.rdsConfig.usernameToSecretId.get(pgUsrMigrate.userName)!).toOdmdRef()}
+                    "RDS_secret": {value: new OdmdCrossRefConsumer(defaultEcrEks, 'migSecret', this.rdsConfig.usernameToSecretId.get(pgUsrMigrate.userName)!).toOdmdRef()}
                 }
             }]
         }
         defaultEcrEks.deployment = {
             containers: [{
-                image: new ContractsCrossRefConsumer(defaultEcrEks, 'appContainer', this.appImgRefProducer).toOdmdRef(),
+                image: new OdmdCrossRefConsumer(defaultEcrEks, 'appContainer', this.appImgRefProducer).toOdmdRef(),
                 envVariables: {
                     "RDS_user": {value: pgUsrMigrate.userName},
-                    "RDS_secret": {value: new ContractsCrossRefConsumer(defaultEcrEks, 'migrus', this.rdsConfig.usernameToSecretId.get(pgUsrMigrate.userName)!).toOdmdRef()}
+                    "RDS_secret": {value: new OdmdCrossRefConsumer(defaultEcrEks, 'migrus', this.rdsConfig.usernameToSecretId.get(pgUsrMigrate.userName)!).toOdmdRef()}
                 }
             }]
         }
