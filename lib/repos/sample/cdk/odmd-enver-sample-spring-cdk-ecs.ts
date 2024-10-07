@@ -2,7 +2,7 @@ import {
     AnyOdmdEnVer,
     BorrowVpcRds, OdmdCrossRefConsumer,
     OdmdEnverCdk,
-    ContractsEnverCdkDefaultVpc, OdmdRdsCluster,
+    OdmdEnverCdkDefaultVpc, OdmdRdsCluster,
     OdmdVpc, PgSchemaUsersProps, PgUsr, SRC_Rev_REF,
     WithRds
 } from "@ondemandenv/contracts-lib-base";
@@ -12,7 +12,7 @@ import {OdmdBuildSampleSpringCdk} from "./odmd-build-sample-spring-cdk";
 export class OdmdEnverSampleSpringCdkEcs extends OdmdEnverCdk implements BorrowVpcRds, WithRds {
 
 
-    readonly vpcRdsProvidingEnver: ContractsEnverCdkDefaultVpc;
+    readonly vpcRdsProvidingEnver: OdmdEnverCdkDefaultVpc;
 
     readonly vpcConfig: OdmdVpc
     readonly rdsConfig: OdmdRdsCluster
