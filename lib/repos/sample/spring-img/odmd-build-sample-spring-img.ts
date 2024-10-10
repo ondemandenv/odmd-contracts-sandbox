@@ -1,8 +1,8 @@
 import {OdmdEnverSampleSpringImg} from "./odmd-enver-sample-spring-img";
 import {OndemandContractsSandbox} from "../../../OndemandContractsSandbox";
-import {OdmdBuild, OdmdEnverCMDs, OdmdEnverCtnImg} from "@ondemandenv/contracts-lib-base";
+import {OdmdBuild, OdmdEnverCtnImg} from "@ondemandenv/contracts-lib-base";
 
-export class OdmdBuildSampleSpringImg extends OdmdBuild<OdmdEnverCMDs> {
+export class OdmdBuildSampleSpringImg extends OdmdBuild<OdmdEnverCtnImg> {
 
     ownerEmail?: string | undefined;
 

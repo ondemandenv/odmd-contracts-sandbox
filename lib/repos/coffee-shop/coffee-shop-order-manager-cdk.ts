@@ -18,8 +18,6 @@ export class CoffeeShopOrderManagerEnver extends OdmdEnverCdk {
         this.eventSrc = new OdmdCrossRefConsumer(this, 'eventSrc', foundationCdk.eventBusSrc.source);
         this.configTableName = new OdmdCrossRefConsumer(this, 'configTableName', foundationCdk.configTableName);
         this.countTableName = new OdmdCrossRefConsumer(this, 'countTableName', foundationCdk.countTableName);
-
-        this.preCdkCmds.push('npm --prefix lib/onWorkflowStarted install')
     }
 
     readonly eventBus: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;

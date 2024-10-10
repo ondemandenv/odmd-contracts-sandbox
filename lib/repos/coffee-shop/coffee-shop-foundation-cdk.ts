@@ -26,8 +26,6 @@ export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
         this.eventBusSrc = new EvBusSrcRefProducer(this, 'bus-src')
         this.configTableName = new EvBusSrcRefProducer(this, 'config-table')
         this.countTableName = new EvBusSrcRefProducer(this, 'count-table')
-
-        this.preCdkCmds.push('npm --prefix lib/initDynamo install')
     }
 
     readonly eventBusSrc: EvBusSrcRefProducer;

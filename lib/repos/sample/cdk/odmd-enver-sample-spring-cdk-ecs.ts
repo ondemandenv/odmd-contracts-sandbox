@@ -57,7 +57,6 @@ export class OdmdEnverSampleSpringCdkEcs extends OdmdEnverCdk implements BorrowV
         this.rdsSocketAddress = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsSocketAddress', this.rdsConfig.clusterSocketAddress)
         this.rdsUsrReadOnly = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'rdsUsrReadOnly', this.rdsConfig.usernameToSecretId.get(this.readOnlyPub.userName)!)
 
-        this.preCdkCmds.push('npm run build')
         this.imgSrcEnver = owner.contracts.springRdsImg.enverImg;
 
         this.migImgName = new OdmdCrossRefConsumer<OdmdEnverSampleSpringCdkEcs, any>(this, 'migImgName', this.imgSrcEnver.migImgRefProducer)
