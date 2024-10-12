@@ -20,8 +20,7 @@ async function main() {
     new Stack(app, 'dummy')
     const csa = app.synth();
 
-
-    const targetEnver = OndemandContractsSandbox.inst.getTargetEnver() as AnyOdmdEnVer
+    const targetEnver = OndemandContractsSandbox.inst.getTargetEnver('spring-rds-img', 'b..odmdSbxUsw1' ) as AnyOdmdEnVer
 
     console.log("targetEnver>" + targetEnver)
 
