@@ -129,7 +129,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                 },
                 __contracts: {
                     owner: 'ondemandenv',
-                    name: 'odmd-app-contracts',
+                    name: 'odmd-contracts-sandbox',
                     ghAppInstallID: 41561130
                 },
                 __networking: {
