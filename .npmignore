@@ -24,3 +24,4 @@ package.json
 package.template.json
 package-lock.json
 tsconfig.json
+.dist

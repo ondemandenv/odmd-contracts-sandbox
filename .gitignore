@@ -10,3 +10,4 @@ cdk/lambda/node_modules
 
 #intellij idea
 .idea
+.dist
