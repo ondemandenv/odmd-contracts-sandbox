@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -10,7 +10,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.40"
+    "@ondemandenv/contracts-lib-base": "0.0.41"
   },
   "devDependencies": {
     "aws-cdk-lib": "2.164.1",
