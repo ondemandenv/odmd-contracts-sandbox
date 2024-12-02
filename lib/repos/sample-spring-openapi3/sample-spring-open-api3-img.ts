@@ -6,15 +6,10 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {RepositoryProps} from "aws-cdk-lib/aws-ecr";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {Stack} from "aws-cdk-lib";
 import {IGrantable} from "aws-cdk-lib/aws-iam";
 
 export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
     builtImgNameToRepoGrants: { [imgName: string]: [grantee: IGrantable, ...actions: string[]][]; };
-
-    generateBuildCmds(stack: Stack, ...args: any[]): string[] {
-        return ['JAVA_HOME=$JAVA_HOME_17_X64 && chmod +x mvnw && ./mvnw org.springframework.boot:spring-boot-maven-plugin:3.0.4:build-image']
-    }
 
     constructor(owner: OdmdBuild<OdmdEnverCtnImg>, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
