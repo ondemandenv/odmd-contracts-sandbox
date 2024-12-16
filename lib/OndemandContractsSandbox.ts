@@ -15,6 +15,7 @@ import {
     OndemandContracts
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
+import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -23,6 +24,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopFoundationCdk: GithubRepo
     CoffeeShopOrderProcessorCdk: GithubRepo
     CoffeeShopOrderManagerCdk: GithubRepo
+    LlmChatLambdaS3: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -55,6 +57,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
+        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
 
         this.odmdBuilds.push(
             this.springRdsImg,
@@ -63,7 +66,8 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
             this.springOpen3Cdk,
             this.coffeeShopFoundationCdk,
             this.coffeeShopOrderProcessorCdk,
-            this.coffeeShopOrderManagerCdk
+            this.coffeeShopOrderManagerCdk,
+            this.llmChatLambdaS3Cdk
         )
         if (new Set(this.odmdBuilds).size != this.odmdBuilds.length) {
             throw new Error('duplicated envers?!')
@@ -172,6 +176,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     owner: 'ondemandenv',
                     name: 'coffee-shop--order-processor',
                     ghAppInstallID: 41561130
+                },
+                LlmChatLambdaS3: {
+                    owner: 'ondemandenv',
+                    name: 'llm-chat_lamba_s3',
+                    ghAppInstallID: 41561130
                 }
             }
         }
@@ -186,6 +195,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopFoundationCdk
     public readonly coffeeShopOrderProcessorCdk
     public readonly coffeeShopOrderManagerCdk
+    public readonly llmChatLambdaS3Cdk
 
 
 }
