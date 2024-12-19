@@ -16,6 +16,7 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
+import {UserPoolCdkOdmdBuild} from "./repos/user-pool/UserPoolCdkOdmdBuild";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -25,6 +26,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopOrderProcessorCdk: GithubRepo
     CoffeeShopOrderManagerCdk: GithubRepo
     LlmChatLambdaS3: GithubRepo
+    UserPool: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -58,18 +60,16 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
+        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
+        this.userPoolCdk = new UserPoolCdkOdmdBuild(this)
 
-        this.odmdBuilds.push(
-            this.springRdsImg,
-            this.springRdsCdk,
-            this.springOpen3Img,
-            this.springOpen3Cdk,
-            this.coffeeShopFoundationCdk,
-            this.coffeeShopOrderProcessorCdk,
-            this.coffeeShopOrderManagerCdk,
-            this.llmChatLambdaS3Cdk
-        )
-        if (new Set(this.odmdBuilds).size != this.odmdBuilds.length) {
+        let tmpSet = new Set(this.odmdBuilds);
+        if (tmpSet.size != this.odmdBuilds.length) {
+            tmpSet.forEach( b=>{
+                const i = this.odmdBuilds.indexOf(b)
+                this.odmdBuilds.splice(i, 1)
+            })
+
             throw new Error('duplicated envers?!')
         }
 
@@ -181,6 +181,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     owner: 'ondemandenv',
                     name: 'llm-chat_lamba_s3',
                     ghAppInstallID: 41561130
+                },
+                UserPool:{
+                    owner: 'ondemandenv',
+                    name: 'user-pool',
+                    ghAppInstallID: 41561130
                 }
             }
         }
@@ -196,6 +201,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopOrderProcessorCdk
     public readonly coffeeShopOrderManagerCdk
     public readonly llmChatLambdaS3Cdk
+    public readonly userPoolCdk
 
 
 }

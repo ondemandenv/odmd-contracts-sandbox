@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -10,13 +10,13 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.43"
+    "@ondemandenv/contracts-lib-base": "0.0.45"
   },
   "devDependencies": {
-    "aws-cdk-lib": "2.164.1",
+    "aws-cdk-lib": "2.173.2",
     "constructs": "^10.0.0",
     "js-yaml": "^4.1.0",
-    "aws-cdk": "2.164.1",
+    "aws-cdk": "2.173.2",
     "@types/node": "^22.5.4",
     "@types/jest": "^29.5.12",
     "@types/js-yaml": "^4.0.9",
@@ -28,7 +28,7 @@
   },
   "peerDependencies": {
     "constructs": "^10.0.0",
-    "aws-cdk-lib": "2.164.1"
+    "aws-cdk-lib": "2.173.2"
   },
   "scripts": {
     "build": "tsc --build",
