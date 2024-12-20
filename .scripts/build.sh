@@ -11,7 +11,7 @@ npm install
 
 PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != $ODMD_contractsLibPkgName || echo $PKG_NAME is good
 
-npm run pubpub
+tsc --build --clean && tsc --build && npm publish
 git config user.name $GITHUB_RUN_ID
 git config user.email "odmd_wfl@ondemandenv.dev"
 PKG_VER=$(jq -r '.version' package.json)
