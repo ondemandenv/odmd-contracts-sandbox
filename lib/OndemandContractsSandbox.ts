@@ -59,8 +59,8 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
-        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
         this.userPoolCdk = new CognitoUserPoolCdkOdmdBuild(this)
+        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
