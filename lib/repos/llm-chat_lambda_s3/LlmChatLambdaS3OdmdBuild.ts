@@ -1,22 +1,33 @@
 import {
     OdmdBuild,
-    OdmdCrossRefConsumer,
+    OdmdCrossRefConsumer, OdmdCrossRefProducer,
     OdmdEnverCdk,
-    OdmdEnverContractsLib,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
+import {CognitoUserPoolEnver} from "../user-pool/CognitoUserPoolCdkOdmdBuild";
 
 export class LlmChatLambdaS3Enver extends OdmdEnverCdk {
 
-    readonly myContractsLibLatest: OdmdCrossRefConsumer<this, OdmdEnverContractsLib>;
+    readonly callbackUrl: OdmdCrossRefProducer<LlmChatLambdaS3Enver>
+    readonly logoutUrl: OdmdCrossRefProducer<LlmChatLambdaS3Enver>
 
-    constructor(owner: OdmdBuild<OdmdEnverCdk>, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
+    readonly userPoolId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
+    readonly userPoolClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
+
+    constructor(owner: LlmChatLambdaS3OdmdBuild, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
-        this.myContractsLibLatest = new OdmdCrossRefConsumer(this, 'contractsLibLatest',
-            owner.contracts.contractsLibBuild.envers.find(e => e.targetAWSRegion == this.targetAWSRegion)!.contractsLibLatest)
+        this.callbackUrl = new OdmdCrossRefProducer(this, "callback-url")
+        this.logoutUrl = new OdmdCrossRefProducer(this, "logout-url")
+
+        const usrPoolEnver = owner.contracts.userPoolCdk.envers[0];
+
+        this.userPoolId = new OdmdCrossRefConsumer(this, 'userPoolId', usrPoolEnver.userPoolId)
+        this.userPoolId = new OdmdCrossRefConsumer(this, 'userPoolArn', usrPoolEnver.userPoolArn)
+        this.userPoolClientId = new OdmdCrossRefConsumer(this, 'resourceUserPoolClientId', usrPoolEnver.resourceUserPoolClientId)
+
     }
 
 }
@@ -32,9 +43,8 @@ export class LlmChatLambdaS3OdmdBuild extends OdmdBuild<OdmdEnverCdk> {
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'LlmChatLambdaS3', scope.githubRepos.LlmChatLambdaS3);
         this.envers = [
-            new LlmChatLambdaS3Enver(this, scope.accounts.workspace1, 'us-west-1', new SRC_Rev_REF('b', 'main')),
+            new LlmChatLambdaS3Enver(this, scope.accounts.workspace1, 'us-east-1', new SRC_Rev_REF('b', 'main')),
         ]
-
     }
 
     get contracts() {

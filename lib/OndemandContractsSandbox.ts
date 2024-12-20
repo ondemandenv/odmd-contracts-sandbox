@@ -16,7 +16,7 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
-import {UserPoolCdkOdmdBuild} from "./repos/user-pool/UserPoolCdkOdmdBuild";
+import {CognitoUserPoolCdkOdmdBuild} from "./repos/user-pool/CognitoUserPoolCdkOdmdBuild";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -60,8 +60,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
-        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
-        this.userPoolCdk = new UserPoolCdkOdmdBuild(this)
+        this.userPoolCdk = new CognitoUserPoolCdkOdmdBuild(this)
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
