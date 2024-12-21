@@ -22,12 +22,20 @@ export class OdmdBuildContractsSbx extends OdmdBuildContractsLib<AccountsSbx, Gi
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'odmd-contracts-npm');
 
-        this.envers = [new OdmdEnverContractsLib(
-            this,
-            scope.accounts.workspace0,
-            'us-west-1',
-            new SRC_Rev_REF("b", "main")
-        )]
+        this.envers = [
+            new OdmdEnverContractsLib(
+                this,
+                scope.accounts.workspace0,
+                'us-west-1',
+                new SRC_Rev_REF("b", "main")
+            ),
+            new OdmdEnverContractsLib(
+                this,
+                scope.accounts.workspace0,
+                'us-west-1',
+                new SRC_Rev_REF("b", "__placeholder")
+            )
+        ]
 
 
     }
