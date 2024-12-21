@@ -32,7 +32,7 @@ export class OdmdBuildContractsSbx extends OdmdBuildContractsLib<AccountsSbx, Gi
             new OdmdEnverContractsLib(
                 this,
                 scope.accounts.workspace0,
-                'us-west-1',
+                'us-east-1',
                 new SRC_Rev_REF("b", "__placeholder")
             )
         ]
