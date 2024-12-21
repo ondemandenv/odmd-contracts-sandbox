@@ -61,10 +61,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.userPoolCdk = new CognitoUserPoolCdkOdmdBuild(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
+        this.userPoolCdk.envers.forEach(e => e.consumeLlmChatLambdaS3Enver())
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
-            tmpSet.forEach( b=>{
+            tmpSet.forEach(b => {
                 const i = this.odmdBuilds.indexOf(b)
                 this.odmdBuilds.splice(i, 1)
             })
@@ -181,7 +182,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     name: 'llm-chat_lamba_s3',
                     ghAppInstallID: 41561130
                 },
-                UserPool:{
+                UserPool: {
                     owner: 'ondemandenv',
                     name: 'user-pool',
                     ghAppInstallID: 41561130
