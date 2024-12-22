@@ -36,8 +36,14 @@ export class CognitoUserPoolEnver extends OdmdEnverCdk {
 
     consumeLlmChatLambdaS3Enver() {
         (this.owner as CognitoUserPoolCdkOdmdBuild).contracts.llmChatLambdaS3Cdk.envers.forEach(llmChat => {
-            this.llmChatCallbackUrl.push(new OdmdCrossRefConsumer(this, llmChat.node.id + '-callback', llmChat.callbackUrl))
-            this.llmChatLogoutUrl.push(new OdmdCrossRefConsumer(this, llmChat.node.id + '-logout', llmChat.logoutUrl))
+            this.llmChatCallbackUrl.push(new OdmdCrossRefConsumer(this, llmChat.node.id + '-callback', llmChat.callbackUrl, {
+                defaultIfAbsent: 'http://localhost:5173/callback',
+                trigger: 'directly'
+            }))
+            this.llmChatLogoutUrl.push(new OdmdCrossRefConsumer(this, llmChat.node.id + '-logout', llmChat.logoutUrl,{
+                defaultIfAbsent: 'http://localhost:5173/logout',
+                trigger: 'directly'
+            }))
         })
     }
 
