@@ -15,7 +15,8 @@ export class LlmChatLambdaS3Enver extends OdmdEnverCdk {
 
     readonly userPoolId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
     readonly userPoolArn: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
-    readonly userPoolClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
+    readonly oauthUserPoolClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
+    readonly resourceUserPoolClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, CognitoUserPoolEnver>
 
     constructor(owner: LlmChatLambdaS3OdmdBuild, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -27,7 +28,8 @@ export class LlmChatLambdaS3Enver extends OdmdEnverCdk {
 
         this.userPoolId = new OdmdCrossRefConsumer(this, 'userPoolId', usrPoolEnver.userPoolId)
         this.userPoolArn = new OdmdCrossRefConsumer(this, 'userPoolArn', usrPoolEnver.userPoolArn)
-        this.userPoolClientId = new OdmdCrossRefConsumer(this, 'userPoolClientId', usrPoolEnver.oauthUserPoolClientId)
+        this.oauthUserPoolClientId = new OdmdCrossRefConsumer(this, 'oauthUserPoolClientId', usrPoolEnver.oauthUserPoolClientId)
+        this.resourceUserPoolClientId = new OdmdCrossRefConsumer(this, 'resourceUserPoolClientId', usrPoolEnver.resourceUserPoolClientId)
     }
 
 }
