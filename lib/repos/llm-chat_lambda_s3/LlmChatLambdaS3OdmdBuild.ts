@@ -27,8 +27,7 @@ export class LlmChatLambdaS3Enver extends OdmdEnverCdk {
 
         this.userPoolId = new OdmdCrossRefConsumer(this, 'userPoolId', usrPoolEnver.userPoolId)
         this.userPoolArn = new OdmdCrossRefConsumer(this, 'userPoolArn', usrPoolEnver.userPoolArn)
-        this.userPoolClientId = new OdmdCrossRefConsumer(this, 'resourceUserPoolClientId', usrPoolEnver.resourceUserPoolClientId)
-
+        this.userPoolClientId = new OdmdCrossRefConsumer(this, 'userPoolClientId', usrPoolEnver.oauthUserPoolClientId)
     }
 
 }
