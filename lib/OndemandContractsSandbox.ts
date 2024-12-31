@@ -17,6 +17,7 @@ import {
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
 import {CognitoUserPoolCdkOdmdBuild} from "./repos/user-pool/CognitoUserPoolCdkOdmdBuild";
+import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -62,6 +63,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.userPoolCdk = new CognitoUserPoolCdkOdmdBuild(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
+        this.visLlmOdmdData = new VisLlmOdmdDataBuild(this)
         this.userPoolCdk.envers.forEach(e => e.consumeLlmChatLambdaS3Enver())
 
         let tmpSet = new Set(this.odmdBuilds);
@@ -207,6 +209,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopOrderProcessorCdk
     public readonly coffeeShopOrderManagerCdk
     public readonly llmChatLambdaS3Cdk
+    public readonly visLlmOdmdData
     public readonly userPoolCdk
 
 
