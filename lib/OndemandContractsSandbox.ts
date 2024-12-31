@@ -26,6 +26,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopOrderProcessorCdk: GithubRepo
     CoffeeShopOrderManagerCdk: GithubRepo
     LlmChatLambdaS3: GithubRepo
+    VisLlmOdmdData: GithubRepo
     UserPool: GithubRepo
 }
 
@@ -185,6 +186,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                 UserPool: {
                     owner: 'ondemandenv',
                     name: 'user-pool',
+                    ghAppInstallID: 41561130
+                },
+                VisLlmOdmdData: {
+                    owner: 'ondemandenv',
+                    name: 'vis-llm-odmd-data',
                     ghAppInstallID: 41561130
                 }
             }
