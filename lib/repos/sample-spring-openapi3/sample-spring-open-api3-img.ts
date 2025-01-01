@@ -34,19 +34,32 @@ export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
 
 
 export class SampleSpringOpenApi3Img extends OdmdBuild<OdmdEnverCtnImg> {
+    protected initializeEnvers(): void {
+        this._theOne = new SampleSpringOpenApi3ImgEnver(this, this.contracts.accounts.workspace1,
+            'us-west-1', new SRC_Rev_REF('b', 'master')
+        )
+        this._envers = [this.theOne]
+    }
 
-    readonly envers: Array<OdmdEnverCtnImg>
-    readonly theOne: SampleSpringOpenApi3ImgEnver
+    private _envers: Array<OdmdEnverCtnImg>
+    get envers(): Array<OdmdEnverCtnImg> {
+        return this._envers
+    }
+
+    private _theOne: SampleSpringOpenApi3ImgEnver
+    get theOne(): SampleSpringOpenApi3ImgEnver {
+        return this._theOne
+    }
 
     ownerEmail?: string | undefined;
 
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'sampleSpringOpenAPI3img', scope.githubRepos.sampleApiEcs);
-        this.theOne = new SampleSpringOpenApi3ImgEnver(this, scope.accounts.workspace1,
-            'us-west-1', new SRC_Rev_REF('b', 'master')
-        )
-        this.envers = [this.theOne]
 
+    }
+
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
     }
 
 }

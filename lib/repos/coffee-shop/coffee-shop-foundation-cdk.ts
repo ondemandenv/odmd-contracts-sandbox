@@ -35,18 +35,29 @@ export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
 }
 
 export class CoffeeShopFoundationCdk extends OdmdBuild<OdmdEnverCdk> {
+    private _envers: Array<CoffeeShopFoundationEnver>;
+    get envers(): Array<CoffeeShopFoundationEnver> {
+        return this._envers;
+    }
 
-    readonly envers: Array<CoffeeShopFoundationEnver>
-
-    readonly theOne
+    private _theOne: CoffeeShopFoundationEnver;
+    get theOne(): CoffeeShopFoundationEnver {
+        return this._theOne;
+    }
 
     ownerEmail?: string | undefined;
 
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'coffee-shop-foundation', scope.githubRepos.CoffeeShopFoundationCdk);
-        this.theOne = new CoffeeShopFoundationEnver(this, scope.accounts.workspace1, 'us-west-1',
-            new SRC_Rev_REF('b', 'master'));
-        this.envers = [this.theOne]
     }
 
+    protected initializeEnvers(): void {
+        this._theOne = new CoffeeShopFoundationEnver(this, this.contracts.accounts.workspace1, 'us-west-1',
+            new SRC_Rev_REF('b', 'master'));
+        this._envers = [this._theOne];
+    }
+
+    get contracts(): OndemandContractsSandbox {
+        return super.contracts as OndemandContractsSandbox;
+    }
 }

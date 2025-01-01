@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.54",
+  "version": "0.0.55",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -10,7 +10,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.46"
+    "@ondemandenv/contracts-lib-base": "0.0.50"
   },
   "devDependencies": {
     "aws-cdk-lib": "2.173.2",
@@ -24,7 +24,8 @@
     "ts-node": "^10.9.2",
     "typescript": "~5.1.6",
     "jest": "^29.7.0",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.1.2",
+    "glob": "^11.0.0"
   },
   "peerDependencies": {
     "constructs": "^10.0.0",
@@ -41,6 +42,7 @@
     "cdk-ls1": "tsc --build --clean && tsc --build && cdk ls --profile sandbox-workspace2",
     "pubpub": "tsc --build --clean && tsc --build && npm run cdk-ls && npm publish",
     "login": "npm login",
-    "cdk8s-import": "cdk8s import/* && ts-node imports/remove-readonly.ts*/"
+    "cdk8s-import": "cdk8s import/* && ts-node imports/remove-readonly.ts*/",
+    "generate-exports": "ts-node .scripts/generate-exports.ts"
   }
 }

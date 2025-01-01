@@ -30,9 +30,15 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk {
 
 export class SampleSpringOpenApi3Cdk extends OdmdBuild<OdmdEnverCdk> {
 
-    readonly envers: Array<SampleSpringOpenApi3CdkEnver>
+    private _envers: Array<SampleSpringOpenApi3CdkEnver>
+    get envers(): Array<SampleSpringOpenApi3CdkEnver> {
+        return this._envers
+    }
 
-    readonly theMaster: SampleSpringOpenApi3CdkEnver
+    private _theMaster: SampleSpringOpenApi3CdkEnver
+    get theMaster(): SampleSpringOpenApi3CdkEnver {
+        return this._theMaster
+    }
 
 
     workDirs = ['cdk']
@@ -41,13 +47,17 @@ export class SampleSpringOpenApi3Cdk extends OdmdBuild<OdmdEnverCdk> {
 
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'sampleSpringOpenAPI3cdk', scope.githubRepos.sampleApiEcs);
-        this.theMaster = new SampleSpringOpenApi3CdkEnver(this,
-            scope.accounts.workspace1, 'us-west-1',
+    }
+
+    protected initializeEnvers(): void {
+        this._theMaster = new SampleSpringOpenApi3CdkEnver(this,
+            this.contracts.accounts.workspace1, 'us-west-1',
             new SRC_Rev_REF('b', 'master')
         )
 
-        this.envers = [this.theMaster]
+        this._envers = [this.theMaster]
     }
+
 
     get contracts(): OndemandContractsSandbox {
         return super.contracts as OndemandContractsSandbox;

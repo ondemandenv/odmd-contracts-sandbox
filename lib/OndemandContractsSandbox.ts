@@ -16,8 +16,8 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
-import {CognitoUserPoolCdkOdmdBuild} from "./repos/user-pool/CognitoUserPoolCdkOdmdBuild";
 import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
+import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -28,7 +28,6 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopOrderManagerCdk: GithubRepo
     LlmChatLambdaS3: GithubRepo
     VisLlmOdmdData: GithubRepo
-    UserPool: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -40,6 +39,10 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
 
     createContractsLibBuild(): OdmdBuildContractsSbx {
         return new OdmdBuildContractsSbx(this)
+    }
+
+    protected initializeUserAuth() {
+        this._userAuth = new OdmdBuildUserAuthSbx(this)
     }
 
     private static _inst: OndemandContractsSandbox
@@ -61,10 +64,8 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
-        this.userPoolCdk = new CognitoUserPoolCdkOdmdBuild(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
         this.visLlmOdmdData = new VisLlmOdmdDataBuild(this)
-        this.userPoolCdk.envers.forEach(e => e.consumeLlmChatLambdaS3Enver())
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
@@ -129,14 +130,19 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         if (!this._githubRepos) {
             this._githubRepos = {
                 githubAppId: "377358",
-                __eks: {
-                    owner: 'ondemandenv',
-                    name: 'odmd-eks',
-                    ghAppInstallID: 41561130
-                },
                 __contracts: {
                     owner: 'ondemandenv',
                     name: 'odmd-contracts-sandbox',
+                    ghAppInstallID: 41561130
+                },
+                __userAuth: {
+                    owner: 'ondemandenv',
+                    name: 'user-pool',
+                    ghAppInstallID: 41561130
+                },
+                __eks: {
+                    owner: 'ondemandenv',
+                    name: 'odmd-eks',
                     ghAppInstallID: 41561130
                 },
                 __networking: {
@@ -185,11 +191,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     name: 'llm-chat_lamba_s3',
                     ghAppInstallID: 41561130
                 },
-                UserPool: {
-                    owner: 'ondemandenv',
-                    name: 'user-pool',
-                    ghAppInstallID: 41561130
-                },
                 VisLlmOdmdData: {
                     owner: 'ondemandenv',
                     name: 'vis-llm-odmd-data',
@@ -210,7 +211,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopOrderManagerCdk
     public readonly llmChatLambdaS3Cdk
     public readonly visLlmOdmdData
-    public readonly userPoolCdk
 
 
 }

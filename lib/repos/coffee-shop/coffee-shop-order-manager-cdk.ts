@@ -28,19 +28,22 @@ export class CoffeeShopOrderManagerEnver extends OdmdEnverCdk {
 }
 
 export class CoffeeShopOrderManagerCdk extends OdmdBuild<OdmdEnverCdk> {
-
-    readonly envers: Array<CoffeeShopOrderManagerEnver>
-
+    private _envers: Array<CoffeeShopOrderManagerEnver>;
+    get envers(): Array<CoffeeShopOrderManagerEnver> {
+        return this._envers;
+    }
 
     ownerEmail?: string | undefined;
 
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'coffeeShopOrderManager', scope.githubRepos.CoffeeShopOrderManagerCdk);
-        const coffeeF = scope.coffeeShopFoundationCdk.theOne
-        this.envers = [new CoffeeShopOrderManagerEnver(this, coffeeF.targetAWSAccountID, coffeeF.targetAWSRegion,
-            new SRC_Rev_REF('b', 'master'))]
     }
 
+    protected initializeEnvers(): void {
+        const coffeeF = this.contracts.coffeeShopFoundationCdk.theOne;
+        this._envers = [new CoffeeShopOrderManagerEnver(this, coffeeF.targetAWSAccountID, coffeeF.targetAWSRegion,
+            new SRC_Rev_REF('b', 'master'))];
+    }
 
     get contracts(): OndemandContractsSandbox {
         return super.contracts as OndemandContractsSandbox;
