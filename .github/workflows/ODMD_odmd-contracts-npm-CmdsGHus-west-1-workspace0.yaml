@@ -19,7 +19,7 @@ on:
         required: false
         default: ''
         description: 'additional message'
-      ghWflPpStackName:
+      gh_wfl_pp_stackname:
         type: string
         required: false
         default: ''
