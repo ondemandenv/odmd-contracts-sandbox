@@ -22,3 +22,4 @@ git tag "v$PKG_VER" && git tag "latest" -m "odmd" && git push origin --tags --fo
 echo "$GITHUB_SHA,$PKG_NAME,$PKG_VER" > "$RUNNER_TEMP/contractsLibLatest.txt"
 
 npm dist-tag add $PKG_NAME@$PKG_VER $GITHUB_SHA --registry=https://npm.pkg.github.com
+
