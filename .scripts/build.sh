@@ -23,4 +23,4 @@ echo "$GITHUB_SHA,$PKG_NAME,$PKG_VER" > "$RUNNER_TEMP/contractsLibLatest.txt"
 
 npm dist-tag add $PKG_NAME@$PKG_VER $GITHUB_SHA --registry=https://npm.pkg.github.com
 
-#c1
+#c2
