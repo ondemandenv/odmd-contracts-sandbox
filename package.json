@@ -10,7 +10,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.50"
+    "@ondemandenv/contracts-lib-base": "0.0.51"
   },
   "devDependencies": {
     "aws-cdk-lib": "2.173.2",
