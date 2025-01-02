@@ -19,11 +19,11 @@ on:
         required: false
         default: ''
         description: 'additional message'
-      messagee:
+      ghWflPpStackName:
         type: string
         required: false
         default: ''
-        description: 'additional message'
+        description: 'the stack to reload, ignored by default'
 jobs:
   odmd_job:
     runs-on: ubuntu-latest
