@@ -51,6 +51,8 @@ export class LlmChatLambdaS3OdmdBuild extends OdmdBuild<OdmdEnverCdk> {
         this._envers = [
             new LlmChatLambdaS3Enver(this, this.contracts.accounts.workspace1, 'us-east-1',
                 new SRC_Rev_REF('b', 'main')),
+            new LlmChatLambdaS3Enver(this, this.contracts.accounts.workspace1, 'us-east-1',
+                new SRC_Rev_REF('b', 'llm_chat_appsync')),
         ];
     }
 
