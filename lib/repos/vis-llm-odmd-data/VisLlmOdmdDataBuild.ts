@@ -49,6 +49,8 @@ export class VisLlmOdmdDataBuild extends OdmdBuild<OdmdEnverCdk> {
         this._envers = [
             new VisLlmOdmdDataEnver(this, this.contracts.accounts.workspace1, 'us-east-1',
                 new SRC_Rev_REF('b', 'master')),
+            new VisLlmOdmdDataEnver(this, this.contracts.accounts.workspace1, 'us-east-1',
+                new SRC_Rev_REF('b', 'llm_chat_appsync')),
         ];
     }
 
