@@ -19,6 +19,7 @@ PKG_VER=$(jq -r '.version' package.json)
 git tag "v$PKG_VER" && git tag "latest" -m "odmd" && git push origin --tags --force
 
 #${producer Id}.txt this is contract lib enver's single producer ...
+#node_modules/@ondemandenv/contracts-lib-base/lib/repos/__contracts/odmd-build-contracts-lib.js
 echo "$GITHUB_SHA,$PKG_NAME,$PKG_VER" > "$RUNNER_TEMP/contractsLibLatest.txt"
 
 npm dist-tag add $PKG_NAME@$PKG_VER $GITHUB_SHA --registry=https://npm.pkg.github.com

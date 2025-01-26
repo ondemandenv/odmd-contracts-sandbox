@@ -18,6 +18,7 @@ import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
 import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
+import {GuardSchedulingBuild} from "./repos/guard-scheduling/GuardSchedulingBuild";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -28,6 +29,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopOrderManagerCdk: GithubRepo
     LlmChatLambdaS3: GithubRepo
     VisLlmOdmdData: GithubRepo
+    GuardScheduling: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -194,6 +196,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                 VisLlmOdmdData: {
                     owner: 'ondemandenv',
                     name: 'vis-llm-odmd-data',
+                    ghAppInstallID: 41561130
+                },
+                GuardScheduling: {
+                    owner: 'ondemandenv',
+                    name: 'guard-scheduling',
                     ghAppInstallID: 41561130
                 }
             }
