@@ -68,6 +68,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
         this.visLlmOdmdData = new VisLlmOdmdDataBuild(this)
+        this.guardScheduling = new GuardSchedulingBuild(this)
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
@@ -218,6 +219,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopOrderManagerCdk
     public readonly llmChatLambdaS3Cdk
     public readonly visLlmOdmdData
+    public readonly guardScheduling: GuardSchedulingBuild;
 
 
 }
