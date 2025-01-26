@@ -27,6 +27,11 @@ export class GuardSchedulingEnver extends OdmdEnverCdk {
         this.idProviderClientId = new OdmdCrossRefConsumer(this, 'userPoolArn', userAuth.idProviderClientId)
     }
 
+
+    getRevStackNames(): Array<string> {
+        const revStackName = super.getRevStackNames()[0];
+        return [revStackName, revStackName + '-tst'];
+    }
 }
 
 
