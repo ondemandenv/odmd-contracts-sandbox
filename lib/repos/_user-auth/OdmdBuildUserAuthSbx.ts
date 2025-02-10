@@ -13,6 +13,9 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
+        this.productsReplicaToRegions.add('us-west-1');
+        this.productsReplicaToRegions.add('us-west-2');
+
     }
 
 
@@ -25,6 +28,7 @@ export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
     }
 
     ownerEmail?: string | undefined;
+
     // readonly extraIamStatements: PolicyStatement[];
 
 
