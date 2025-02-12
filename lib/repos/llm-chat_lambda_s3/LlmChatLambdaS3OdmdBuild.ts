@@ -7,15 +7,15 @@ import {
 } from "@ondemandenv/contracts-lib-base";
 import {PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {OdmdEnverUserAuthSbx} from "../_user-auth/OdmdBuildUserAuthSbx";
+import {OdmdEnverUserAuth} from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
 
 export class LlmChatLambdaS3Enver extends OdmdEnverCdk {
 
     readonly callbackUrl: OdmdCrossRefProducer<LlmChatLambdaS3Enver>
     readonly logoutUrl: OdmdCrossRefProducer<LlmChatLambdaS3Enver>
 
-    readonly idProviderName: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, OdmdEnverUserAuthSbx>
-    readonly idProviderClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, OdmdEnverUserAuthSbx>
+    readonly idProviderName: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, OdmdEnverUserAuth>
+    readonly idProviderClientId: OdmdCrossRefConsumer<LlmChatLambdaS3Enver, OdmdEnverUserAuth>
 
     constructor(owner: LlmChatLambdaS3OdmdBuild, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);

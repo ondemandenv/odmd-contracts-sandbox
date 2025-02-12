@@ -1,4 +1,5 @@
 import {
+    OdmdCrossRefConsumer,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
@@ -6,25 +7,39 @@ import {
     OdmdBuildUserAuth,
     OdmdEnverUserAuth
 } from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
+import {VisLlmOdmdDataEnver} from "../vis-llm-odmd-data/VisLlmOdmdDataBuild";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
+    readonly callbackUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
+    readonly logoutUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
 
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
-        this.productsReplicaToRegions.add('us-west-1');
-        this.productsReplicaToRegions.add('us-west-2');
+        // this.productsReplicaToRegions.add('us-west-1');
+        // this.productsReplicaToRegions.add('us-west-2');
 
+        this.callbackUrls = []
+        this.logoutUrls = []
     }
 
 
+    readonly owner: OdmdBuildUserAuthSbx;
+
+    wireConsuming() {
+        this.owner.contracts.visLlmOdmdData.envers
+            .forEach(e => {
+                this.callbackUrls.push(new OdmdCrossRefConsumer(this, e.callbackUrl.node.id, e.callbackUrl))
+                this.logoutUrls.push(new OdmdCrossRefConsumer(this, e.logoutUrl.node.id, e.logoutUrl))
+            })
+    }
 }
 
 
 export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
     get envers(): OdmdEnverUserAuthSbx[] {
-        return this._envers;
+        return this._envers as OdmdEnverUserAuthSbx[];
     }
 
     ownerEmail?: string | undefined;
@@ -41,5 +56,9 @@ export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
 
     get contracts() {
         return this.node.scope as OndemandContractsSandbox;
+    }
+
+    wireConsuming() {
+        this.envers.forEach(e => e.wireConsuming())
     }
 }
