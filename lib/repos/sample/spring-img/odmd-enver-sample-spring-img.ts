@@ -9,6 +9,7 @@ import {
 import {OdmdBuildSampleSpringImg} from "./odmd-build-sample-spring-img";
 import {Stack} from "aws-cdk-lib";
 import {IGrantable} from "aws-cdk-lib/aws-iam";
+import {EksClusterEnverSbx} from "../../_eks/odmd-build-eks-sbx";
 
 export class OdmdEnverSampleSpringImg extends OdmdEnverCtnImg {
     builtImgNameToRepoGrants: { [imgName: string]: [grantee: IGrantable, ...actions: string[]][]; };
@@ -72,7 +73,9 @@ export class OdmdEnverSampleSpringImg extends OdmdEnverCtnImg {
 
         vpcRds.addSchemaUsers(this.rdsConfig, this.pgSchemaUsersProps)
 
-        const defaultEcrEks = owner.contracts.defaultEcrEks!.getOrCreateOne(this, owner.contracts.eksCluster!.argoClusterEnver,
+        const targetEksCluster = owner.contracts.eksCluster!.envers[0]! as EksClusterEnverSbx;
+        const defaultEcrEks = owner.contracts.defaultEcrEks!.getOrCreateOne(this,
+            targetEksCluster,
             this.owner.buildId + '/' + this.targetRevision.toPathPartStr()
         );
 

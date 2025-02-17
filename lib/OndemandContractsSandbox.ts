@@ -19,6 +19,7 @@ import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambda
 import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 import {GuardSchedulingBuild} from "./repos/guard-scheduling/GuardSchedulingBuild";
+import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -45,6 +46,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
 
     protected initializeUserAuth() {
         this._userAuth = new OdmdBuildUserAuthSbx(this)
+    }
+
+
+    protected initializeEksCluster() {
+        this._eksCluster = new OdmdBuildEksSbx(this);
     }
 
     private static _inst: OndemandContractsSandbox
