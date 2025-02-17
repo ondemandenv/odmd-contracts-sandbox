@@ -30,8 +30,14 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
     wireConsuming() {
         this.owner.contracts.visLlmOdmdData.envers
             .forEach(e => {
-                this.callbackUrls.push(new OdmdCrossRefConsumer(this, e.callbackUrl.node.id, e.callbackUrl))
-                this.logoutUrls.push(new OdmdCrossRefConsumer(this, e.logoutUrl.node.id, e.logoutUrl))
+                this.callbackUrls.push(new OdmdCrossRefConsumer(this, e.callbackUrl.node.id, e.callbackUrl, {
+                    defaultIfAbsent: `https://tst.ondemandenv.dev:5173/callback/${e.owner.buildId}/${e.targetRevision.value}`,
+                    trigger: 'no'
+                }))
+                this.logoutUrls.push(new OdmdCrossRefConsumer(this, e.logoutUrl.node.id, e.logoutUrl, {
+                    defaultIfAbsent: `https://tst.ondemandenv.dev:5173/logout/${e.owner.buildId}/${e.targetRevision.value}`,
+                    trigger: 'no'
+                }))
             })
     }
 }
