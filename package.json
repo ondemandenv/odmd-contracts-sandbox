@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -43,7 +43,6 @@
     "cdk-ls1": "tsc --build --clean && tsc --build && cdk ls --profile sandbox-workspace2",
     "pubpub": "tsc --build --clean && tsc --build && npm run cdk-ls && npm publish",
     "login": "npm login",
-    "cdk8s-import": "cdk8s import/* && ts-node imports/remove-readonly.ts*/",
     "generate-exports": "ts-node .scripts/generate-exports.ts"
   }
 }

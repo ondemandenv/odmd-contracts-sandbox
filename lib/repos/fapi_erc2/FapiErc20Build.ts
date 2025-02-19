@@ -9,17 +9,19 @@ import {PolicyStatement} from "aws-cdk-lib/aws-iam";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import {OdmdEnverUserAuth} from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
 
-export class GuardSchedulingEnver extends OdmdEnverCdk {
+export class FapiErc20Enver extends OdmdEnverCdk {
 
-    readonly apiUrl: OdmdCrossRefProducer<GuardSchedulingEnver>
+    readonly callbackUrl: OdmdCrossRefProducer<FapiErc20Enver>
+    readonly logoutUrl: OdmdCrossRefProducer<FapiErc20Enver>
 
-    readonly idProviderName: OdmdCrossRefConsumer<GuardSchedulingEnver, OdmdEnverUserAuth>
-    readonly idProviderClientId: OdmdCrossRefConsumer<GuardSchedulingEnver, OdmdEnverUserAuth>
+    readonly idProviderName: OdmdCrossRefConsumer<FapiErc20Enver, OdmdEnverUserAuth>
+    readonly idProviderClientId: OdmdCrossRefConsumer<FapiErc20Enver, OdmdEnverUserAuth>
 
-    constructor(owner: GuardSchedulingBuild, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
+    constructor(owner: FapiErc20Build, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
-        this.apiUrl = new OdmdCrossRefProducer(this, "api-url")
+        this.callbackUrl = new OdmdCrossRefProducer(this, "callback-url")
+        this.logoutUrl = new OdmdCrossRefProducer(this, "logout-url")
 
         const userAuth = owner.contracts.userAuth!.envers[0];
 
@@ -35,9 +37,9 @@ export class GuardSchedulingEnver extends OdmdEnverCdk {
 }
 
 
-export class GuardSchedulingBuild extends OdmdBuild<OdmdEnverCdk> {
-    private _envers: Array<GuardSchedulingEnver>;
-    get envers(): Array<GuardSchedulingEnver> {
+export class FapiErc20Build extends OdmdBuild<OdmdEnverCdk> {
+    private _envers: Array<FapiErc20Enver>;
+    get envers(): Array<FapiErc20Enver> {
         return this._envers;
     }
 
@@ -45,14 +47,13 @@ export class GuardSchedulingBuild extends OdmdBuild<OdmdEnverCdk> {
     readonly extraIamStatements: PolicyStatement[];
 
     constructor(scope: OndemandContractsSandbox) {
-        super(scope, 'GuardScheduling', scope.githubRepos.GuardScheduling);
+        super(scope, 'FapiErc20Build', scope.githubRepos.FapiErc20Build);
     }
 
-    workDirs: string[] = ['solution', 'cdk'];
 
     protected initializeEnvers(): void {
         this._envers = [
-            new GuardSchedulingEnver(this, this.contracts.accounts.workspace1, 'us-east-1',
+            new FapiErc20Enver(this, this.contracts.accounts.workspace1, 'us-east-1',
                 new SRC_Rev_REF('b', 'master'))
         ];
     }

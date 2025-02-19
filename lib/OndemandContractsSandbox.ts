@@ -3,8 +3,6 @@ import {SampleSpringOpenApi3Img} from "./repos/sample-spring-openapi3/sample-spr
 import {CoffeeShopFoundationCdk} from "./repos/coffee-shop/coffee-shop-foundation-cdk";
 import {CoffeeShopOrderProcessorCdk} from "./repos/coffee-shop/coffee-shop-order-processor-cdk";
 import {CoffeeShopOrderManagerCdk} from "./repos/coffee-shop/coffee-shop-order-manager-cdk";
-import {OdmdBuildSampleSpringCdk} from "./repos/sample/cdk/odmd-build-sample-spring-cdk";
-import {OdmdBuildSampleSpringImg} from "./repos/sample/spring-img/odmd-build-sample-spring-img";
 import {App} from "aws-cdk-lib";
 import {
     AccountsCentralView,
@@ -18,8 +16,8 @@ import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx
 import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
 import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
-import {GuardSchedulingBuild} from "./repos/guard-scheduling/GuardSchedulingBuild";
 import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
+import {FapiErc20Build} from "./repos/fapi_erc2/FapiErc20Build";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -30,7 +28,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopOrderManagerCdk: GithubRepo
     LlmChatLambdaS3: GithubRepo
     VisLlmOdmdData: GithubRepo
-    GuardScheduling: GithubRepo
+    FapiErc20Build: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -65,8 +63,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         }
         OndemandContractsSandbox._inst = this;
 
-        this.springRdsImg = new OdmdBuildSampleSpringImg(this)
-        this.springRdsCdk = new OdmdBuildSampleSpringCdk(this)
         this.springOpen3Img = new SampleSpringOpenApi3Img(this)
         this.springOpen3Cdk = new SampleSpringOpenApi3Cdk(this)
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
@@ -74,7 +70,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
         this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
         this.visLlmOdmdData = new VisLlmOdmdDataBuild(this)
-        this.guardScheduling = new GuardSchedulingBuild(this);
+        this.fapiErc20 = new FapiErc20Build(this);
 
 
         ( this.userAuth as OdmdBuildUserAuthSbx ).wireConsuming()
@@ -208,9 +204,9 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     name: 'vis-llm-odmd-data',
                     ghAppInstallID: 41561130
                 },
-                GuardScheduling: {
+                FapiErc20Build: {
                     owner: 'ondemandenv',
-                    name: 'guard-scheduling',
+                    name: 'Fapi-Erc20',
                     ghAppInstallID: 41561130
                 }
             }
@@ -219,8 +215,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     }
 
 
-    public readonly springRdsCdk
-    public readonly springRdsImg
     public readonly springOpen3Img
     public readonly springOpen3Cdk
     public readonly coffeeShopFoundationCdk
@@ -228,7 +222,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly coffeeShopOrderManagerCdk
     public readonly llmChatLambdaS3Cdk
     public readonly visLlmOdmdData :VisLlmOdmdDataBuild
-    public readonly guardScheduling: GuardSchedulingBuild;
+    public readonly fapiErc20: FapiErc20Build;
 
 
 }
