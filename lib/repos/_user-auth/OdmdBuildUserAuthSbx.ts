@@ -40,6 +40,12 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
                 }))
             })
     }
+
+
+    getRevStackNames(): Array<string> {
+        const name = super.getRevStackNames()[0];
+        return [name, name + '-web-hosting', name + '-web-ui'];
+    }
 }
 
 
