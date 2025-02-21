@@ -14,9 +14,6 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
     readonly callbackUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
     readonly logoutUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
 
-
-    readonly identityPoolId: OdmdCrossRefProducer<OdmdEnverUserAuthSbx>
-
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
@@ -25,9 +22,7 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
         this.callbackUrls = []
         this.logoutUrls = []
-        this.identityPoolId = new OdmdCrossRefProducer(this, "IdentityPoolId");
     }
-
 
     readonly owner: OdmdBuildUserAuthSbx;
 

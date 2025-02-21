@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.70",
+  "version": "0.0.71",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -10,7 +10,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.56"
+    "@ondemandenv/contracts-lib-base": "0.0.57"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
