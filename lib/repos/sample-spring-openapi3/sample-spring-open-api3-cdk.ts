@@ -1,12 +1,15 @@
 import {
+    IOdmdEnver,
+    KubeCtlThruCentral,
     OdmdBuild,
     OdmdCrossRefConsumer, OdmdCrossRefProducer,
     OdmdEnverCdk, OdmdEnverCtnImg,
+    OdmdEnverEksCluster,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 
-export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk {
+export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCtlThruCentral {
     constructor(owner: SampleSpringOpenApi3Cdk, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
         this.appImgRepoRef = new OdmdCrossRefConsumer(this, 'appImgRefProducer',
@@ -20,7 +23,14 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk {
                 {pathPart: 'swagger-ui'}
             ]
         })
+        this.userEnver = this;
+        this.targetNamespace = this.node.id
+        this.targetEksCluster = owner.contracts.eksCluster!.envers[0]
     }
+
+    userEnver: IOdmdEnver;
+    targetNamespace: string;
+    targetEksCluster: OdmdEnverEksCluster;
 
     readonly appImgRepoRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
     readonly appImgLatestRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
