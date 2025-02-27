@@ -20,7 +20,7 @@ export class EksClusterEnverSbx extends OdmdEnverEksCluster implements WithVpc {
     readonly centralVpcCidr: OdmdCrossRefConsumer<this, IPAM_AB>;
 
     constructor(owner: OdmdBuildEksSbx, id: string) {
-        super(owner, owner.contracts.accounts.workspace0, 'us-west-1', new SRC_Rev_REF("b", 'odmdSbxUsw1Gyang'));
+        super(owner, owner.contracts.accounts.workspace0, 'us-west-1', new SRC_Rev_REF("b", 'main'));
         const ipamWest1Le = owner.contracts .networking!.ipam_west1_le;
         const adr = new OdmdIpAddresses(this, ipamWest1Le.ipamPoolName)
 
