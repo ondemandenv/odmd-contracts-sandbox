@@ -9,15 +9,13 @@ import {
     GithubReposCentralView,
 } from "@ondemandenv/contracts-lib-base/lib/OdmdContractsCentralView";
 import {
-    GithubRepo,
+    GithubRepo, OdmdBuild, OdmdEnverCdk,
     OndemandContracts
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
-import {LlmChatLambdaS3OdmdBuild} from "./repos/llm-chat_lambda_s3/LlmChatLambdaS3OdmdBuild";
-import {VisLlmOdmdDataBuild} from "./repos/vis-llm-odmd-data/VisLlmOdmdDataBuild";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
-import {FapiErc20Build} from "./repos/fapi_erc2/FapiErc20Build";
+import {OdmdBuildUserAuth} from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -56,6 +54,15 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         return this._inst
     }
 
+
+    get userAuth(): OdmdBuildUserAuthSbx {
+        return super.userAuth! as OdmdBuildUserAuthSbx;
+    }
+
+    get eksCluster(): OdmdBuildEksSbx | undefined {
+        return super.eksCluster as OdmdBuildEksSbx;
+    }
+
     constructor(app: App) {
         super(app, 'OndemandContractsSandbox');
         if (OndemandContractsSandbox._inst) {
@@ -68,12 +75,8 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
-        this.llmChatLambdaS3Cdk = new LlmChatLambdaS3OdmdBuild(this)
-        this.visLlmOdmdData = new VisLlmOdmdDataBuild(this)
-        this.fapiErc20 = new FapiErc20Build(this);
 
-
-        ( this.userAuth as OdmdBuildUserAuthSbx ).wireConsuming()
+        this.userAuth.wireConsuming()
 
         let tmpSet = new Set(this.odmdBuilds);
         if (tmpSet.size != this.odmdBuilds.length) {
@@ -219,10 +222,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public readonly springOpen3Cdk
     public readonly coffeeShopFoundationCdk
     public readonly coffeeShopOrderProcessorCdk
-    public readonly coffeeShopOrderManagerCdk
-    public readonly llmChatLambdaS3Cdk
-    public readonly visLlmOdmdData :VisLlmOdmdDataBuild
-    public readonly fapiErc20: FapiErc20Build;
+    public readonly coffeeShopOrderManagerCdk: CoffeeShopOrderManagerCdk
 
 
 }

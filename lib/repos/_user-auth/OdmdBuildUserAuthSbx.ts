@@ -7,12 +7,12 @@ import {
     OdmdBuildUserAuth,
     OdmdEnverUserAuth
 } from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
-import {VisLlmOdmdDataEnver} from "../vis-llm-odmd-data/VisLlmOdmdDataBuild";
+import {IOdmdEnver} from "@ondemandenv/contracts-lib-base/lib/model/odmd-enver";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
-    readonly callbackUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
-    readonly logoutUrls: OdmdCrossRefConsumer<this, VisLlmOdmdDataEnver>[]
+    readonly callbackUrls: OdmdCrossRefConsumer<this, IOdmdEnver>[]
+    readonly logoutUrls: OdmdCrossRefConsumer<this, IOdmdEnver>[]
 
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -27,6 +27,7 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
     readonly owner: OdmdBuildUserAuthSbx;
 
     wireConsuming() {
+        /*
         this.owner.contracts.visLlmOdmdData.envers
             .forEach(e => {
                 this.callbackUrls.push(new OdmdCrossRefConsumer(this, e.callbackUrl.node.id, e.callbackUrl, {
@@ -38,6 +39,7 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
                     trigger: 'no'
                 }))
             })
+        */
     }
 
 
