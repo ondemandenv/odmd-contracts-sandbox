@@ -1,5 +1,4 @@
 import {
-    IOdmdEnver,
     KubeCtlThruCentral,
     OdmdBuild,
     OdmdCrossRefConsumer, OdmdCrossRefProducer,
@@ -23,14 +22,12 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
                 {pathPart: 'swagger-ui'}
             ]
         })
-        this.userEnver = this;
-        this.targetNamespace = this.node.id
-        this.targetEksCluster = owner.contracts.eksCluster!.envers[0]
+        this.targetEksClusterEndpoint = new OdmdCrossRefConsumer(this, 'targetEksClusterEndpoint', owner.contracts.eksCluster!.envers[0].clusterEndpoint)
     }
 
-    userEnver: IOdmdEnver;
-    targetNamespace: string;
-    targetEksCluster: OdmdEnverEksCluster;
+    targetNamespace?: string | undefined;
+    targetEksClusterEndpoint: OdmdCrossRefConsumer<KubeCtlThruCentral, OdmdEnverEksCluster>;
+
 
     readonly appImgRepoRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
     readonly appImgLatestRef: OdmdCrossRefConsumer<SampleSpringOpenApi3CdkEnver, OdmdEnverCtnImg>
