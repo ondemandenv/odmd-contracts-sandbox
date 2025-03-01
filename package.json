@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.79",
+  "version": "0.0.80",
   "bin": {
     "cdk": "bin/cdk.js"
   },
