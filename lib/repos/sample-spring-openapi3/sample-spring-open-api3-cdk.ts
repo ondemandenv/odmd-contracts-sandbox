@@ -24,11 +24,12 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
         })
         const eksClusterEnverSbx = owner.contracts.eksCluster!.envers[0];
         this.targetEksClusterEndpoint = new OdmdCrossRefConsumer(this, 'targetEksClusterEndpoint', eksClusterEnverSbx.clusterEndpoint)
+        this.oidcProvider = new OdmdCrossRefConsumer(this, 'oidcProviderArn', eksClusterEnverSbx.oidcProvider)
         this.defaultNodeGroupRoleArn = new OdmdCrossRefConsumer(this, 'defaultNodeGroupRoleArn', eksClusterEnverSbx.defaultNodeGroupRoleArn)
     }
 
-    targetNamespace?: string | undefined;
     targetEksClusterEndpoint: OdmdCrossRefConsumer<KubeCtlThruCentral, OdmdEnverEksCluster>;
+    oidcProvider: OdmdCrossRefConsumer<KubeCtlThruCentral, OdmdEnverEksCluster>;
     defaultNodeGroupRoleArn: OdmdCrossRefConsumer<KubeCtlThruCentral, OdmdEnverEksCluster>;
 
 
