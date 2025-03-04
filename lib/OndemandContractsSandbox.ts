@@ -15,7 +15,6 @@ import {
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
-import {OdmdBuildUserAuth} from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -24,9 +23,6 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopFoundationCdk: GithubRepo
     CoffeeShopOrderProcessorCdk: GithubRepo
     CoffeeShopOrderManagerCdk: GithubRepo
-    LlmChatLambdaS3: GithubRepo
-    VisLlmOdmdData: GithubRepo
-    FapiErc20Build: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -195,21 +191,6 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                 CoffeeShopOrderProcessorCdk: {
                     owner: 'ondemandenv',
                     name: 'coffee-shop--order-processor',
-                    ghAppInstallID: 41561130
-                },
-                LlmChatLambdaS3: {
-                    owner: 'ondemandenv',
-                    name: 'llm-chat_lamba_s3',
-                    ghAppInstallID: 41561130
-                },
-                VisLlmOdmdData: {
-                    owner: 'ondemandenv',
-                    name: 'vis-llm-odmd-data',
-                    ghAppInstallID: 41561130
-                },
-                FapiErc20Build: {
-                    owner: 'ondemandenv',
-                    name: 'Fapi-Erc20',
                     ghAppInstallID: 41561130
                 }
             }
