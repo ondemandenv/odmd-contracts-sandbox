@@ -2,17 +2,16 @@ import {
     OdmdBuild,
     OdmdEnverCtnImg,
     CtnImgRefProducer,
-    SRC_Rev_REF,
+    SRC_Rev_REF, OdmdCrossRefConsumer,
 } from "@ondemandenv/contracts-lib-base";
 import {RepositoryProps} from "aws-cdk-lib/aws-ecr";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import {IGrantable} from "aws-cdk-lib/aws-iam";
-import {OdmdCrossRefProducer} from "@ondemandenv/contracts-lib-base/lib/model/odmd-cross-refs";
 import {AnyOdmdEnVer} from "@ondemandenv/contracts-lib-base/lib/model/odmd-enver";
 
 export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
     builtImgNameToRepoGrants: {
-        [imgName: string]: [grantee: IGrantable | OdmdCrossRefProducer<AnyOdmdEnVer>, ...actions: string[]][];
+        [imgName: string]: [grantee: IGrantable | OdmdCrossRefConsumer<OdmdEnverCtnImg, AnyOdmdEnVer>, ...actions: string[]][];
     };
 
     constructor(owner: SampleSpringOpenApi3Img, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
@@ -22,9 +21,11 @@ export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
         this.builtImgNameToRepoProducer = {
             [this.imgName]: this.ctnImgRefProducer
         }
+        const consumingEksClusterNodeGroups = new OdmdCrossRefConsumer(
+            this, 'consumingEksClusterNodeGroups', owner.contracts.eksCluster!.envers[0].defaultNodeGroupRoleArn);
         this.builtImgNameToRepoGrants = {
             [this.imgName]: [
-                [owner.contracts.eksCluster!.envers[0].defaultNodeGroupRoleArn,
+                [consumingEksClusterNodeGroups,
                     "ecr:BatchGetImage",
                     "ecr:BatchCheckLayerAvailability",
                     "ecr:GetDownloadUrlForLayer",
