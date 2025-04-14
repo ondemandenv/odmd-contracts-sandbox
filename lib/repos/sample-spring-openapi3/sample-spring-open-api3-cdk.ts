@@ -23,9 +23,12 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
             ]
         })
         const eksClusterEnverSbx = owner.contracts.eksCluster!.envers[0];
-        this.targetEksClusterEndpoint = new OdmdCrossRefConsumer(this, 'targetEksClusterEndpoint', eksClusterEnverSbx.clusterEndpoint)
-        this.oidcProvider = new OdmdCrossRefConsumer(this, 'oidcProviderArn', eksClusterEnverSbx.oidcProvider)
-        this.defaultNodeGroupRoleArn = new OdmdCrossRefConsumer(this, 'defaultNodeGroupRoleArn', eksClusterEnverSbx.defaultNodeGroupRoleArn)
+        this.targetEksClusterEndpoint = new OdmdCrossRefConsumer(this, 'targetEksClusterEndpoint', eksClusterEnverSbx.clusterEndpoint,
+            {trigger: 'directly', defaultIfAbsent: 'https://abc123.us-east-1.eks.amazonaws.com' })
+        this.oidcProvider = new OdmdCrossRefConsumer(this, 'oidcProviderArn', eksClusterEnverSbx.oidcProvider,
+            {trigger: 'directly', defaultIfAbsent: 'https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLED1234abcd'})
+        this.defaultNodeGroupRoleArn = new OdmdCrossRefConsumer(this, 'defaultNodeGroupRoleArn', eksClusterEnverSbx.defaultNodeGroupRoleArn,
+            { trigger: "directly", defaultIfAbsent: 'arn:aws:iam::123456789012:role/eksctl-my-cluster-nodegroup-role-NodeInstanceRole-aifle'})
     }
 
     targetEksClusterEndpoint: OdmdCrossRefConsumer<KubeCtlThruCentral, OdmdEnverEksCluster>;

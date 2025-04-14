@@ -22,7 +22,8 @@ export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
             [this.imgName]: this.ctnImgRefProducer
         }
         const consumingEksClusterNodeGroups = new OdmdCrossRefConsumer(
-            this, 'consumingEksClusterNodeGroups', owner.contracts.eksCluster!.envers[0].defaultNodeGroupRoleArn);
+            this, 'consumingEksClusterNodeGroups', owner.contracts.eksCluster!.envers[0].defaultNodeGroupRoleArn,
+        { trigger: "directly", defaultIfAbsent: 'arn:aws:iam::123456789012:role/eksctl-my-cluster-nodegroup-role-NodeInstanceRole-aifle'})
         this.builtImgNameToRepoGrants = {
             [this.imgName]: [
                 [consumingEksClusterNodeGroups,
