@@ -21,19 +21,29 @@ export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
         this.builtImgNameToRepoProducer = {
             [this.imgName]: this.ctnImgRefProducer
         }
+        /*
+
+        //won't work because this is used as Iam principal which will be checked in deployment runtime, and I'm not deploying eks for now
         const consumingEksClusterNodeGroups = new OdmdCrossRefConsumer(
             this, 'consumingEksClusterNodeGroups', owner.contracts.eksCluster!.envers[0].defaultNodeGroupRoleArn,
-        { trigger: "directly", defaultIfAbsent: 'arn:aws:iam::123456789012:role/eksctl-my-cluster-nodegroup-role-NodeInstanceRole-aifle'})
+            {
+                trigger: "directly",
+                defaultIfAbsent: 'arn:aws:iam::123456789012:role/eksctl-my-cluster-nodegroup-role-NodeInstanceRole-aifle'
+            })
+
         this.builtImgNameToRepoGrants = {
             [this.imgName]: [
-                [consumingEksClusterNodeGroups,
+                [
+                    consumingEksClusterNodeGroups,
                     "ecr:BatchGetImage",
                     "ecr:BatchCheckLayerAvailability",
                     "ecr:GetDownloadUrlForLayer",
                     "ecr:GetRepositoryPolicy"
-                ]
+                ],
             ]
         }
+
+        */
     }
 
     get imgName() {
