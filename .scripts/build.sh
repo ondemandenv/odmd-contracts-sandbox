@@ -1,4 +1,5 @@
-set -x
+#!/bin/bash
+set -ex
 
 echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc
 echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc
@@ -6,20 +7,37 @@ echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc
 ls -ltarh
 cat .npmrc
 
-npm install
-
 PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != $ODMD_contractsLibPkgName || echo $PKG_NAME is good
 
+npm install && tsc --build
 #npm run test
 
 # >>>>
+
+PACK_OUTPUT_JSON=$(npm pack --json 2>/dev/null)
+
+TGZ_FILENAME=$(echo "$PACK_OUTPUT_JSON" | jq -r '.[0].filename')
+echo "INFO: Determined filename via --json: $TGZ_FILENAME"
+
+# Verify the filename was found and the file exists
+if [ -z "$TGZ_FILENAME" ] || [ ! -f "$TGZ_FILENAME" ]; then
+    echo "ERROR: Could not determine packed filename or file '$TGZ_FILENAME' not found." >&2
+    exit 1
+fi
+echo "INFO: Successfully packed: $TGZ_FILENAME"
+ls -l "$TGZ_FILENAME"
+
+#<<<<
+
+
+# >>>>
+
 PUBLISH_LOG=$(mktemp)
 
-# Attempt to publish, teeing output to the log file AND stdout/stderr
-# Note: The exit status of the pipeline is the exit status of the last command (tee),
-# but PIPESTATUS[0] will hold the exit status of npm publish.
 echo "Attempting to publish package..."
-npm publish 2>&1 | tee "$PUBLISH_LOG"
+set -x
+npm publish "$TGZ_FILENAME" 2>&1 | tee "$PUBLISH_LOG"
+set -ex
 
 # Capture the exit status of the 'npm publish' command (the first command in the pipe)
 publish_status=${PIPESTATUS[0]}
@@ -30,8 +48,6 @@ if [ "$publish_status" -ne 0 ]; then
   if grep -q "npm error code E409" "$PUBLISH_LOG"; then
     # It was the E409 error. Print a message and allow the script to continue.
     echo "INFO: npm publish failed with E409 (Conflict - version already exists). Ignoring error as requested."
-    # Optional: Output the log content for information
-    # cat "$PUBLISH_LOG"
   else
     # It was a different error. Print the log and exit with the original error code.
     echo "ERROR: npm publish failed with a non-E409 error (Exit Code: $publish_status):" >&2
@@ -42,8 +58,6 @@ if [ "$publish_status" -ne 0 ]; then
 else
   # npm publish was successful (exit code 0)
   echo "INFO: npm publish successful."
-  # Optional: Output the log content for information
-  # cat "$PUBLISH_LOG"
 fi
 
 # Clean up the temporary log file if we haven't exited
