@@ -10,9 +10,9 @@ import {
 import {IOdmdEnver} from "@ondemandenv/contracts-lib-base/lib/model/odmd-enver";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
-
-    readonly callbackUrls: OdmdCrossRefConsumer<this, IOdmdEnver>[]
-    readonly logoutUrls: OdmdCrossRefConsumer<this, IOdmdEnver>[]
+    hostedZoneId: string = 'Z07732022HSGPH3GRGCVY';
+    hostedZoneName: string = 'root.ondemandenv.link';
+    subDomainName: string = 'odmd-sandbox-auth';
 
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -20,8 +20,6 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
         // this.productsReplicaToRegions.add('us-west-1');
         // this.productsReplicaToRegions.add('us-west-2');
 
-        this.callbackUrls = []
-        this.logoutUrls = []
     }
 
     readonly owner: OdmdBuildUserAuthSbx;
@@ -63,7 +61,7 @@ export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
     protected initializeEnvers(): void {
         this._envers = [
             new OdmdEnverUserAuthSbx(this, this.contracts.accounts.workspace0, 'us-east-1',
-                new SRC_Rev_REF('b', 'main')),
+                new SRC_Rev_REF('b', 'odmd-sbx')),
         ] as OdmdEnverUserAuthSbx[]
     }
 
