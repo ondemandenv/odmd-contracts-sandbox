@@ -1,5 +1,4 @@
 import {
-    OdmdCrossRefConsumer, OdmdCrossRefProducer,
     SRC_Rev_REF
 } from "@ondemandenv/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
@@ -11,8 +10,8 @@ import {IOdmdEnver} from "@ondemandenv/contracts-lib-base/lib/model/odmd-enver";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
     hostedZoneId: string = 'Z07732022HSGPH3GRGCVY';
-    hostedZoneName: string = 'root.ondemandenv.link';
-    subDomainName: string = 'odmd-sandbox-auth';
+    hostedZoneName: string = 'auth.ondemandenv.link';
+    subDomainName: string = 'odmd-sandbox';
 
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
