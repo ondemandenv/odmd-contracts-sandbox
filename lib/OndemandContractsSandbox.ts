@@ -9,7 +9,7 @@ import {
     GithubReposCentralView,
 } from "@ondemandenv/contracts-lib-base/lib/OdmdContractsCentralView";
 import {
-    GithubRepo, OdmdBuild, OdmdEnverCdk,
+    GithubRepo, OdmdBuildNetworking,
     OndemandContracts
 } from "@ondemandenv/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
@@ -57,6 +57,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
 
     get eksCluster(): OdmdBuildEksSbx | undefined {
         return super.eksCluster as OdmdBuildEksSbx;
+    }
+
+
+    protected initializeNetworking() {
+        this._networking = new OdmdBuildNetworking( this );
     }
 
     constructor(app: App) {
