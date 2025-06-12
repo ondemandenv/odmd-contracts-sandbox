@@ -1,717 +1,1081 @@
-# ONDEMANDENV Full SDLC Guide: Coffee Shop Microservices Example
+# ONDEMANDENV Complete SDLC Guide
 
-This guide demonstrates the complete Software Development Lifecycle (SDLC) using ONDEMANDENV through a practical microservices example. You'll learn how contracts, dependencies, deployments, and developer workflows come together to create a robust, scalable platform.
+**From Architecture Design to Production Operations: A Comprehensive Guide**
 
-## Table of Contents
+[![ONDEMANDENV](https://img.shields.io/badge/Platform-ONDEMANDENV-blue)](https://ondemandenv.dev)
+[![AWS CDK](https://img.shields.io/badge/Infrastructure-AWS_CDK-orange)](https://aws.amazon.com/cdk/)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)](https://www.typescriptlang.org/)
 
-1. [Architecture Overview](#architecture-overview)
-2. [Contract Definition Phase](#contract-definition-phase)
-3. [Service Implementation Phase](#service-implementation-phase)
-4. [Platform Integration Phase](#platform-integration-phase)
-5. [Development Workflow](#development-workflow)
-6. [Production Deployment](#production-deployment)
-7. [Operations and Monitoring](#operations-and-monitoring)
-8. [Advanced Patterns](#advanced-patterns)
+This guide demonstrates the complete Software Development Lifecycle (SDLC) using ONDEMANDENV through the Coffee Shop microservices example. Learn how to transform distributed system complexity into manageable, code-driven architecture.
 
 ---
 
-## Architecture Overview
+## 📋 Table of Contents
 
-### System Components
-
-Our coffee shop system demonstrates a typical microservices architecture:
-
-```
-┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│                     │    │                     │    │                     │
-│  Coffee Shop        │    │  Order Manager      │    │  Order Processor    │
-│  Foundation         │◄───┤  Service            │    │  Service            │
-│                     │    │                     │    │                     │
-│  • Event Bus        │    │  • Order Workflows  │    │  • Order Processing │
-│  • Config Tables    │◄───┤  • State Machines   │    │  • Business Logic   │
-│  • Counter Tables   │    │  • Event Handling   │    │  • Event Handling   │
-│                     │    │                     │    │                     │
-└─────────────────────┘    └─────────────────────┘    └─────────────────────┘
-         │                            │                            │
-         │                            │                            │
-         └────────────────────────────┼────────────────────────────┘
-                                      │
-                              ┌───────▼────────┐
-                              │                │
-                              │ ONDEMANDENV    │
-                              │ Platform       │
-                              │                │
-                              │ • Dependency   │
-                              │   Resolution   │
-                              │ • Cross-Account│
-                              │   Deployment   │
-                              │ • Environment  │
-                              │   Cloning      │
-                              │                │
-                              └────────────────┘
-```
-
-### Key Principles
-
-- **Application-Centric**: Each service owns its complete vertical slice (infrastructure + application)
-- **Contract-Driven**: All dependencies explicitly defined in code
-- **Environment-as-Code**: Every environment version is reproducible and versioned
-- **On-Demand Isolation**: Developers get full-stack environments instantly
+1. [🏗️ Architecture Design Phase](#️-architecture-design-phase)
+2. [📝 Contract Definition Phase](#-contract-definition-phase) 
+3. [⚙️ Service Implementation Phase](#️-service-implementation-phase)
+4. [🚀 Platform Integration Phase](#-platform-integration-phase)
+5. [👨‍💻 Development Workflow](#-development-workflow)
+6. [🏭 Production Deployment](#-production-deployment)
+7. [📊 Operations & Monitoring](#-operations--monitoring)
+8. [🎯 Advanced Patterns](#-advanced-patterns)
+9. [🔧 Troubleshooting Guide](#-troubleshooting-guide)
 
 ---
 
-## Contract Definition Phase
+## 🏗️ Architecture Design Phase
 
-### Step 1: Define Service Contracts
+### System Overview
 
-In the ContractsLib (`contracts-sandbox`), teams define their service boundaries and dependencies.
+The Coffee Shop demonstrates a modern **event-driven microservices architecture** with clear service boundaries and explicit dependencies:
 
-#### Foundation Service Contract
+```mermaid
+graph TB
+    subgraph "Coffee Shop Ecosystem"
+        F[Foundation Service<br/>📦 Infrastructure Provider]
+        OM[Order Manager<br/>📋 Order Orchestration]
+        OP[Order Processor<br/>⚙️ Fulfillment Engine]
+        
+        F -->|EventBridge + DynamoDB| OM
+        F -->|EventBridge + DynamoDB| OP
+        OM -->|Order Events| OP
+    end
+    
+    subgraph "Platform Services"
+        AUTH[🔐 User Authentication]
+        EKS[☸️ EKS Clusters]
+        NET[🌐 Networking]
+    end
+    
+    subgraph "AWS Multi-Account"
+        subgraph "workspace1"
+            F1[Foundation]
+            OM1[Order Manager]
+            OP1[Order Processor]
+        end
+        subgraph "workspace0"
+            AUTH1[Auth Service]
+            EKS1[EKS Cluster]
+        end
+        subgraph "networking"
+            NET1[VPC/TGW]
+        end
+    end
+```
+
+### Key Architecture Principles
+
+#### 🎯 **Application-Centric Infrastructure**
+```typescript
+// Each service owns its complete vertical slice
+export class CoffeeShopFoundationStack extends Stack {
+    constructor() {
+        // Infrastructure: EventBridge, DynamoDB, IAM
+        // Runtime: Lambda functions, API Gateway
+        // Security: IAM roles, resource policies
+        // Monitoring: CloudWatch, X-Ray
+    }
+}
+```
+
+#### 🔗 **Explicit Contract Boundaries**
+```typescript
+// Products: What service provides
+readonly eventBusSrc: EvBusSrcRefProducer;
+readonly configTableName: OdmdCrossRefProducer<CoffeeShopFoundationEnver>;
+
+// Consumers: What service requires
+readonly eventBusConsumer: OdmdCrossRefConsumer<FoundationEnver>;
+```
+
+#### 🌍 **Cross-Account Deployment Strategy**
+- **central** (`590184031795`): Platform orchestration engine
+- **networking** (`590183907424`): Shared VPC, Transit Gateway
+- **workspace0** (`975050243618`): Platform services (Auth, EKS)
+- **workspace1** (`590184130740`): Coffee shop applications
+
+---
+
+## 📝 Contract Definition Phase
+
+### Step 1: Define Service Boundaries
+
+Create the **ContractsLib** - your system's architectural constitution:
+
+```typescript
+// lib/OndemandContractsSandbox.ts
+export class OndemandContractsSandbox extends OndemandContracts {
+    constructor(app: App) {
+        super(app, 'OndemandContractsSandbox');
+        
+        // Initialize service contracts
+        this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this);
+        this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this);
+        this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this);
+    }
+}
+```
+
+### Step 2: Foundation Service Contract
+
+**Role**: Shared infrastructure provider for the entire coffee shop ecosystem
 
 ```typescript
 // lib/repos/coffee-shop/coffee-shop-foundation-cdk.ts
 export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
-    constructor(owner: OdmdBuild<OdmdEnverCdk>, targetAWSAccountID: string,
-                targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
-        super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
+    constructor(owner: CoffeeShopFoundationCdk, 
+                targetAccount: string, 
+                targetRegion: string, 
+                targetRevision: SRC_Rev_REF) {
+        super(owner, targetAccount, targetRegion, targetRevision);
         
-        // PRODUCTS this service will publish
-        this.eventBusSrc = new EvBusSrcRefProducer(this, 'bus-src')
-        this.configTableName = new EvBusSrcRefProducer(this, 'config-table')
-        this.countTableName = new EvBusSrcRefProducer(this, 'count-table')
+        // 📤 PRODUCTS: What this service provides to others
+        this.eventBusSrc = new EvBusSrcRefProducer(this, 'EventBusSource');
+        this.configTableName = new OdmdCrossRefProducer(this, 'ConfigTable');  
+        this.countTableName = new OdmdCrossRefProducer(this, 'CounterTable');
     }
 
+    // Service interface definition
     readonly eventBusSrc: EvBusSrcRefProducer;
     readonly configTableName: OdmdCrossRefProducer<CoffeeShopFoundationEnver>;
     readonly countTableName: OdmdCrossRefProducer<CoffeeShopFoundationEnver>;
 }
 
-export class CoffeeShopFoundationCdk extends OdmdBuild<OdmdEnverCdk> {
+export class CoffeeShopFoundationCdk extends OdmdBuild<CoffeeShopFoundationEnver> {
     constructor(scope: OndemandContractsSandbox) {
         super(scope, 'coffee-shop-foundation', scope.githubRepos.CoffeeShopFoundationCdk);
     }
 
     protected initializeEnvers(): void {
+        // Define deployment targets
         this._theOne = new CoffeeShopFoundationEnver(
+            this,
+            this.contracts.accounts.workspace1,  // Target AWS account
+            'us-west-1',                         // Target region
+            new SRC_Rev_REF('b', 'main')         // Git branch (incremental)
+        );
+        
+        // Production immutable version
+        this._prod = new CoffeeShopFoundationEnver(
             this, 
             this.contracts.accounts.workspace1, 
             'us-west-1',
-            new SRC_Rev_REF('b', 'master')  // Branch-based Enver
+            new SRC_Rev_REF('t', 'v1.0.0')      // Git tag (immutable)
         );
-        this._envers = [this._theOne];
+        
+        this._envers = [this._theOne, this._prod];
     }
 }
 ```
 
-#### Order Manager Service Contract
+### Step 3: Order Manager Contract
+
+**Role**: Order lifecycle orchestration with state machine workflows
 
 ```typescript
 // lib/repos/coffee-shop/coffee-shop-order-manager-cdk.ts
 export class CoffeeShopOrderManagerEnver extends OdmdEnverCdk {
-    constructor(owner: CoffeeShopOrderManagerCdk, targetAWSAccountID: string,
-                targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
-        super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
+    constructor(owner: CoffeeShopOrderManagerCdk,
+                targetAccount: string,
+                targetRegion: string, 
+                targetRevision: SRC_Rev_REF) {
+        super(owner, targetAccount, targetRegion, targetRevision);
 
-        // CONSUME foundation services - explicit dependency declaration
-        const foundationCdk = owner.contracts.coffeeShopFoundationCdk.theOne;
-        this.eventBus = new OdmdCrossRefConsumer(this, 'eventBus', foundationCdk.eventBusSrc);
-        this.eventSrc = new OdmdCrossRefConsumer(this, 'eventSrc', foundationCdk.eventBusSrc.source);
-        this.configTableName = new OdmdCrossRefConsumer(this, 'configTableName', foundationCdk.configTableName);
-        this.countTableName = new OdmdCrossRefConsumer(this, 'countTableName', foundationCdk.countTableName);
+        // 📥 CONSUMERS: Explicit dependencies on foundation services
+        const foundation = owner.contracts.coffeeShopFoundationCdk.theOne;
+        
+        this.eventBusConsumer = new OdmdCrossRefConsumer(
+            this, 'EventBus', foundation.eventBusSrc
+        );
+        this.configTableConsumer = new OdmdCrossRefConsumer(
+            this, 'ConfigTable', foundation.configTableName
+        );
+        this.countTableConsumer = new OdmdCrossRefConsumer(
+            this, 'CountTable', foundation.countTableName
+        );
+        
+        // 📤 PRODUCTS: What this service provides
+        this.orderApiEndpoint = new OdmdCrossRefProducer(this, 'OrderAPI');
+        this.orderStatusEvents = new EvBusSrcRefProducer(this, 'OrderStatusEvents');
     }
 
-    readonly eventBus: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
-    readonly eventSrc: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
-    readonly configTableName: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
-    readonly countTableName: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
+    // Dependency declarations
+    readonly eventBusConsumer: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
+    readonly configTableConsumer: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
+    readonly countTableConsumer: OdmdCrossRefConsumer<CoffeeShopOrderManagerEnver, CoffeeShopFoundationEnver>;
+    
+    // Service interface
+    readonly orderApiEndpoint: OdmdCrossRefProducer<CoffeeShopOrderManagerEnver>;
+    readonly orderStatusEvents: EvBusSrcRefProducer;
 }
 ```
 
-### Step 2: Organizational Mapping
+### Step 4: Order Processor Contract
 
-The ContractsLib defines the organizational structure:
+**Role**: Order fulfillment processing engine
 
 ```typescript
-// lib/OndemandContractsSandbox.ts
-export class OndemandContractsSandbox extends OndemandContracts {
-    get accounts(): AccountsSbx {
-        return {
-            central: '590184031795',        // Platform orchestration
-            networking: '590183907424',    // Shared networking
-            workspace0: "975050243618",    // Platform services
-            workspace1: '590184130740',    // Application workloads
-        }
+// lib/repos/coffee-shop/coffee-shop-order-processor-cdk.ts
+export class CoffeeShopOrderProcessorEnver extends OdmdEnverCdk {
+    constructor(owner: CoffeeShopOrderProcessorCdk,
+                targetAccount: string,
+                targetRegion: string,
+                targetRevision: SRC_Rev_REF) {
+        super(owner, targetAccount, targetRegion, targetRevision);
+
+        // Dependencies on foundation AND order manager
+        const foundation = owner.contracts.coffeeShopFoundationCdk.theOne;
+        const orderManager = owner.contracts.coffeeShopOrderManagerCdk.theOne;
+        
+        // Foundation dependencies
+        this.eventBusConsumer = new OdmdCrossRefConsumer(
+            this, 'EventBus', foundation.eventBusSrc
+        );
+        this.configTableConsumer = new OdmdCrossRefConsumer(
+            this, 'ConfigTable', foundation.configTableName
+        );
+        
+        // Order manager dependencies
+        this.orderStatusConsumer = new OdmdCrossRefConsumer(
+            this, 'OrderStatus', orderManager.orderStatusEvents
+        );
+        
+        // Service outputs
+        this.fulfillmentEvents = new EvBusSrcRefProducer(this, 'FulfillmentEvents');
     }
 
-    get githubRepos(): GithubReposSbx {
-        return {
-            CoffeeShopFoundationCdk: {
-                owner: 'ondemandenv',
-                name: 'coffee-shop--foundation',
-                ghAppInstallID: 41561130
-            },
-            CoffeeShopOrderManagerCdk: {
-                owner: 'ondemandenv',
-                name: 'coffee-shop--order-manager', 
-                ghAppInstallID: 41561130
-            },
-            // ... other repos
-        }
-    }
+    readonly eventBusConsumer: OdmdCrossRefConsumer<CoffeeShopOrderProcessorEnver, CoffeeShopFoundationEnver>;
+    readonly configTableConsumer: OdmdCrossRefConsumer<CoffeeShopOrderProcessorEnver, CoffeeShopFoundationEnver>;
+    readonly orderStatusConsumer: OdmdCrossRefConsumer<CoffeeShopOrderProcessorEnver, CoffeeShopOrderManagerEnver>;
+    readonly fulfillmentEvents: EvBusSrcRefProducer;
 }
 ```
 
-### Contract Review Process
+### Step 5: Contract Governance
 
-1. **Pull Request Creation**: Teams propose contract changes via PR
-2. **Cross-Team Review**: Affected teams review dependency changes
-3. **Type Safety**: TypeScript ensures contract compliance
-4. **Approval & Merge**: Changes become the new architecture truth
+#### Review Process
+```bash
+# 1. Create contract changes
+git checkout -b feature/add-payment-service
+git add lib/repos/coffee-shop/coffee-shop-payment-cdk.ts
+git commit -m "Add payment service contract with external API integration"
+
+# 2. Submit for review
+gh pr create --title "Add Payment Service Contract" \
+  --body "Adds payment processing service with Stripe integration"
+
+# 3. Cross-team review
+# - Security team reviews IAM permissions
+# - Platform team reviews resource requirements  
+# - Dependent service teams approve interface changes
+
+# 4. Merge triggers platform updates
+# Platform automatically updates CI/CD pipelines for affected services
+```
+
+#### Contract Validation
+```typescript
+// tests/contract-validation.test.ts
+describe('Coffee Shop Architecture Contracts', () => {
+    test('Foundation service publishes required products', () => {
+        const foundation = contracts.coffeeShopFoundationCdk.theOne;
+        expect(foundation.eventBusSrc).toBeDefined();
+        expect(foundation.configTableName).toBeDefined();
+        expect(foundation.countTableName).toBeDefined();
+    });
+    
+    test('Order manager has all required dependencies', () => {
+        const orderManager = contracts.coffeeShopOrderManagerCdk.theOne;
+        expect(orderManager.eventBusConsumer).toBeDefined();
+        expect(orderManager.configTableConsumer).toBeDefined();
+    });
+    
+    test('Immutable envers only depend on other immutable envers', () => {
+        const immutableEnvers = contracts.allEnvers.filter(e => e.isImmutable);
+        immutableEnvers.forEach(enver => {
+            enver.consumers.forEach(consumer => {
+                expect(consumer.producer.enver.isImmutable).toBe(true);
+            });
+        });
+    });
+});
+```
 
 ---
 
-## Service Implementation Phase
+## ⚙️ Service Implementation Phase
 
-### Step 3: Foundation Service Implementation
+### Step 6: Foundation Service Implementation
 
-The foundation service implements its contract by creating actual AWS resources:
-
-```typescript
-// coffee-shop--foundation/lib/coffee-shop--foundation-stack.ts
-export class CoffeeShopFoundationStack extends cdk.Stack {
-    constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-        super(scope, id, props)
-
-        // Create actual AWS resources
-        const eventBus = new EventBus(this, 'coffee-shop-event-bus')
-        new Rule(this, 'log-all', {
-            eventBus,
-            eventPattern: {source: [eventBus.eventBusName]},
-            targets: [new CloudWatchLogGroup(
-                new LogGroup(this, 'logAll-log-group', {
-                    retention: RetentionDays.TWO_WEEKS
-                })
-            )]
-        })
-
-        const configTable = new Table(this, 'configTable', {
-            partitionKey: {name: 'PK', type: AttributeType.STRING},
-            billingMode: BillingMode.PAY_PER_REQUEST,
-            removalPolicy: RemovalPolicy.DESTROY
-        });
-
-        // Initialize with menu data
-        new InitDynamoDb(this, 'init-configTable', {
-            table: configTable, 
-            data: [
-                JSON.parse(fs.readFileSync(__dirname + `/menu.json`).toString()),
-                marshall({
-                    "PK": "config",
-                    "maxOrdersInQueue": 10,
-                    "maxOrdersPerUser": 1,
-                    "storeOpen": true
-                })
-            ],
-            partitionKey: configTableProps.partitionKey
-        })
-
-        const countingTable = new Table(this, 'countingTable-tmp', {
-            partitionKey: {name: 'PK', type: AttributeType.STRING},
-            billingMode: BillingMode.PAY_PER_REQUEST,
-            removalPolicy: RemovalPolicy.DESTROY
-        })
-
-        // PUBLISH products to the platform
-        const myEnver = OndemandContractsSandbox.inst.getTargetEnver() as CoffeeShopFoundationEnver
-        new OdmdShareOut(
-            this, new Map<OdmdCrossRefProducer<CoffeeShopFoundationEnver>, any>([
-                [myEnver.configTableName, configTable.tableName],
-                [myEnver.countTableName, countingTable.tableName],
-                [myEnver.eventBusSrc, eventBus.eventBusName],
-                [myEnver.eventBusSrc.source, eventBus.eventBusName],
-            ])
-        )
-    }
-}
-```
-
-### Step 4: Order Manager Service Implementation
-
-The Order Manager consumes foundation services:
+Transform contracts into actual AWS infrastructure:
 
 ```typescript
-// coffee-shop--order-manager/lib/coffee-shop--order-manager-stack.ts
-export class CoffeeShopOrderManagerStack extends cdk.Stack {
-    constructor(scope: Construct, enver: OdmdEnverCdk, props?: cdk.StackProps) {
-        const id = enver.getRevStackNames()[0];
+// coffee-shop--foundation/lib/coffee-shop-foundation-stack.ts
+export class CoffeeShopFoundationStack extends Stack {
+    constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
-
-        const myEnver = enver as CoffeeShopOrderProcessorEnver
         
-        // CONSUME products from foundation service
-        const eventBus: IEventBus = EventBus.fromEventBusName(
-            this, 'eventBus', 
-            myEnver.eventBus.getSharedValue(this)  // Platform resolves dependency!
-        )
-        const source = myEnver.eventSrc.getSharedValue(this) as string
-        const configTable: ITable = dynamodb.Table.fromTableName(
-            this, 'ConfigTable', 
-            myEnver.configTableName.getSharedValue(this)  // Platform resolves dependency!
-        );
-
-        // Create service-specific resources
-        const orderTable = new Table(this, 'orderTable', {
-            partitionKey: {name: 'PK', type: AttributeType.STRING},
-            sortKey: {name: 'SK', type: AttributeType.STRING},
-            billingMode: BillingMode.PAY_PER_REQUEST,
-            removalPolicy: RemovalPolicy.DESTROY
+        // 🚌 EventBridge Custom Bus
+        const eventBus = new EventBus(this, 'CoffeeShopEventBus', {
+            eventBusName: `coffee-shop-${this.enverName}-events`
         });
-
-        // Event-driven integration with foundation
-        const onWorkflowStartedFunc = new NodejsFunction(this, 'onWorkflowStarted-func', {
-            entry: __dirname + '/onWorkflowStarted/index.ts',
-            environment: {
-                orderTableName: orderTable.tableName
+        
+        // 📊 Configuration Table
+        const configTable = new Table(this, 'ConfigTable', {
+            tableName: `coffee-shop-${this.enverName}-config`,
+            partitionKey: { name: 'configKey', type: AttributeType.STRING },
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            pointInTimeRecovery: true,
+            encryption: TableEncryption.AWS_MANAGED
+        });
+        
+        // 📈 Counter Table  
+        const counterTable = new Table(this, 'CounterTable', {
+            tableName: `coffee-shop-${this.enverName}-counters`,
+            partitionKey: { name: 'counterName', type: AttributeType.STRING },
+            billingMode: BillingMode.PAY_PER_REQUEST,
+            streamSpecification: StreamViewType.NEW_AND_OLD_IMAGES
+        });
+        
+        // 🔐 Cross-service IAM roles
+        const consumerRole = new Role(this, 'ConsumerRole', {
+            assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+            managedPolicies: [
+                ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole')
+            ],
+            inlinePolicies: {
+                'EventBridgeAccess': new PolicyDocument({
+                    statements: [
+                        new PolicyStatement({
+                            actions: ['events:PutEvents'],
+                            resources: [eventBus.eventBusArn]
+                        })
+                    ]
+                }),
+                'DynamoDBAccess': new PolicyDocument({
+                    statements: [
+                        new PolicyStatement({
+                            actions: ['dynamodb:GetItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
+                            resources: [configTable.tableArn, counterTable.tableArn]
+                        })
+                    ]
+                })
             }
         });
         
-        new Rule(this, 'onWorkflowStarted-rule', {
-            eventBus,  // Using shared event bus from foundation
-            eventPattern: {
-                source: [source],
-                detailType: [OndemandContractsSandbox.inst.coffeeShopOrderProcessorCdk.WORKFLOW_STARTED]
-            },
-            targets: [new aws_events_targets.LambdaFunction(onWorkflowStartedFunc)]
-        })
-        
-        orderTable.grantFullAccess(onWorkflowStartedFunc)
-
-        // Step Functions for order processing
-        const stateMachine = new sfn.StateMachine(this, 'ServerlesspressoStateMachine', {
-            definitionBody: sfn.DefinitionBody.fromChainable(
-                decideAction
-                    .when(sfn.Condition.stringEquals('$.action', 'complete'), cc.completeOrder)
-                    .when(sfn.Condition.stringEquals('$.action', 'cancel'), cc.cancelOrder)
-                    .when(sfn.Condition.stringEquals('$.action', 'make'), sm.claimOrder)
-                    .otherwise(po.customerPutOrder)
-            ),
+        // 📤 Publish Products using ONDEMANDENV constructs
+        new OdmdShareOut(this, 'EventBusSource', {
+            value: Stack.of(this).toJsonString({
+                eventBusName: eventBus.eventBusName,
+                eventBusArn: eventBus.eventBusArn,
+                consumerRoleArn: consumerRole.roleArn
+            })
         });
+        
+        new OdmdShareOut(this, 'ConfigTable', {
+            value: Stack.of(this).toJsonString({
+                tableName: configTable.tableName,
+                tableArn: configTable.tableArn
+            })
+        });
+        
+        new OdmdShareOut(this, 'CounterTable', {
+            value: Stack.of(this).toJsonString({
+                tableName: counterTable.tableName,
+                tableArn: counterTable.tableArn,
+                streamArn: counterTable.tableStreamArn
+            })
+        });
+    }
+}
+```
+
+### Step 7: Order Manager Implementation
+
+Build the order orchestration service:
+
+```typescript
+// coffee-shop--order-manager/lib/order-manager-stack.ts
+export class OrderManagerStack extends Stack {
+    constructor(scope: Construct, id: string, props?: StackProps) {
+        super(scope, id, props);
+
+        // 📥 Consume foundation dependencies
+        const foundationOutputs = JSON.parse(this.getConsumerValue('EventBus'));
+        const configTableOutputs = JSON.parse(this.getConsumerValue('ConfigTable'));
+        
+        // Import foundation resources
+        const eventBus = EventBus.fromEventBusArn(
+            this, 'EventBus', foundationOutputs.eventBusArn
+        );
+        const configTable = Table.fromTableName(
+            this, 'ConfigTable', configTableOutputs.tableName
+        );
+        
+        // 🏗️ Order processing Lambda
+        const orderProcessorLambda = new Function(this, 'OrderProcessor', {
+            runtime: Runtime.NODEJS_18_X,
+            handler: 'index.handler',
+            code: Code.fromAsset('src'),
+            environment: {
+                EVENT_BUS_NAME: eventBus.eventBusName,
+                CONFIG_TABLE_NAME: configTable.tableName,
+                ENVER_NAME: this.enverName
+            },
+            role: Role.fromRoleArn(this, 'ConsumerRole', foundationOutputs.consumerRoleArn)
+        });
+        
+        // 🌐 API Gateway for order management
+        const api = new RestApi(this, 'OrderAPI', {
+            restApiName: `coffee-shop-${this.enverName}-orders`,
+            description: 'Coffee Shop Order Management API'
+        });
+        
+        const ordersResource = api.root.addResource('orders');
+        ordersResource.addMethod('POST', new LambdaIntegration(orderProcessorLambda));
+        ordersResource.addMethod('GET', new LambdaIntegration(orderProcessorLambda));
+        
+        // 📋 Step Functions for order workflow
+        const orderWorkflow = new StateMachine(this, 'OrderWorkflow', {
+            definition: Chain.start(
+                new Wait(this, 'WaitForPayment', { time: WaitTime.duration(Duration.seconds(30)) })
+                .next(new Pass(this, 'ProcessPayment'))
+                .next(new Choice(this, 'PaymentResult')
+                    .when(Condition.stringEquals('$.paymentStatus', 'SUCCESS'), 
+                          new Pass(this, 'OrderConfirmed'))
+                    .otherwise(new Pass(this, 'OrderFailed'))
+                )
+            )
+        });
+        
+        // 📤 Publish service API endpoint
+        new OdmdShareOut(this, 'OrderAPI', {
+            value: Stack.of(this).toJsonString({
+                apiEndpoint: api.url,
+                apiId: api.restApiId,
+                orderWorkflowArn: orderWorkflow.stateMachineArn
+            })
+        });
+        
+        // 📤 Publish order status events
+        new OdmdShareOut(this, 'OrderStatusEvents', {
+            value: Stack.of(this).toJsonString({
+                eventBusName: eventBus.eventBusName,
+                eventSource: 'coffee-shop.order-manager',
+                eventTypes: ['OrderCreated', 'OrderConfirmed', 'OrderFailed']
+            })
+        });
+    }
+}
+```
+
+### Step 8: Testing Service Implementation
+
+```typescript
+// coffee-shop--foundation/test/foundation-stack.test.ts
+import { Template } from 'aws-cdk-lib/assertions';
+import { App } from 'aws-cdk-lib';
+import { CoffeeShopFoundationStack } from '../lib/coffee-shop-foundation-stack';
+
+describe('Coffee Shop Foundation Stack', () => {
+    test('Creates EventBridge custom bus', () => {
+        const app = new App();
+        const stack = new CoffeeShopFoundationStack(app, 'TestStack');
+        const template = Template.fromStack(stack);
+        
+        template.hasResourceProperties('AWS::Events::EventBus', {
+            Name: Match.stringLikeRegexp('coffee-shop-.*-events')
+        });
+    });
+    
+    test('Creates DynamoDB tables with proper configuration', () => {
+        const app = new App();
+        const stack = new CoffeeShopFoundationStack(app, 'TestStack');
+        const template = Template.fromStack(stack);
+        
+        template.hasResourceProperties('AWS::DynamoDB::Table', {
+            BillingMode: 'PAY_PER_REQUEST',
+            PointInTimeRecoverySpecification: { PointInTimeRecoveryEnabled: true }
+        });
+    });
+    
+    test('Publishes required products via OdmdShareOut', () => {
+        const app = new App();  
+        const stack = new CoffeeShopFoundationStack(app, 'TestStack');
+        const template = Template.fromStack(stack);
+        
+        // Verify SSM parameters are created for each product
+        template.resourceCountIs('AWS::SSM::Parameter', 3);
+    });
+});
+```
+
+---
+
+## 🚀 Platform Integration Phase
+
+### Step 9: GitHub Actions Integration
+
+ONDEMANDENV automatically generates GitHub Actions workflows for each Enver:
+
+```yaml
+# .github/workflows/ODMD_coffee-shop-foundation-CdkGithubWF-us-west-1-workspace1.yaml
+name: Deploy Coffee Shop Foundation
+on:
+  workflow_dispatch:
+    inputs:
+      aws_credentials:
+        description: 'AWS credentials override'
+        required: false
+      message:
+        description: 'Deployment message'
+        required: false
+  push:
+    branches: [main, develop]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+      
+      # ONDEMANDENV environment resolution
+      - uses: ondemandenv/wflact-resolvEnvars@main
+        with:
+          aws_credentials: ${{ github.event.inputs.aws_credentials }}
+          trigger_message: ${{ github.event.inputs.message }}
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: coffee-shop-foundation
+          ODMD_awsRegion: us-west-1
+          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_coffee_shop_foundation_CdkGithubWF_us_west_1_workspace1'] }}
+      
+      # CDK deployment
+      - name: Deploy CDK Stack
+        run: |
+          npm ci
+          npm run build
+          npx cdk deploy --require-approval never
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: coffee-shop-foundation
+          
+      # Publish products to ONDEMANDENV platform
+      - uses: ondemandenv/wflact-buildProduces@main
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: coffee-shop-foundation
+          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_coffee_shop_foundation_CdkGithubWF_us_west_1_workspace1'] }}
+```
+
+### Step 10: Cross-Account IAM Configuration
+
+ONDEMANDENV manages cross-account permissions automatically:
+
+```typescript
+// Platform automatically creates these IAM configurations
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::590184130740:role/ODMDWorkspaceRole"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "ondemandenv-coffee-shop-foundation"
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+## 👨‍💻 Development Workflow
+
+### Step 11: Feature Development with Environment Cloning
+
+```bash
+# Developer workflow for new feature
+git checkout -b feature/payment-integration
+# Make code changes...
+git add .
+git commit -m "Add Stripe payment integration
+
+odmd: create@main"
+
+# Push triggers automatic environment provisioning
+git push origin feature/payment-integration
+```
+
+**What happens next:**
+
+1. **Platform Detection**: ONDEMANDENV detects the `odmd: create@main` command
+2. **Environment Cloning**: Creates isolated environment with feature branch code
+3. **Dependency Resolution**: Reuses exact dependency versions from `main` environment
+4. **Resource Provisioning**: Deploys complete infrastructure stack with unique naming
+5. **Service Integration**: Configures cross-service connectivity automatically
+
+### Step 12: Development Environment Access
+
+```bash
+# Get environment details
+curl -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  "https://api.ondemandenv.dev/envers/coffee-shop-foundation/feature-payment-integration"
+
+# Response includes:
+{
+  "enverName": "coffee-shop-foundation-feature-payment-integration",
+  "status": "DEPLOYED",
+  "endpoints": {
+    "eventBusName": "coffee-shop-feature-payment-integration-events",
+    "configTableName": "coffee-shop-feature-payment-integration-config"
+  },
+  "dependencies": {
+    "networking": "main-20241201-v123",
+    "userAuth": "main-20241201-v456"
+  }
+}
+```
+
+### Step 13: Integration Testing
+
+```bash
+# Test against isolated environment
+export COFFEE_SHOP_API_ENDPOINT="https://api-feature-payment-integration.coffee-shop.dev"
+export EVENT_BUS_NAME="coffee-shop-feature-payment-integration-events"
+
+# Run integration tests
+npm run test:integration
+```
+
+### Step 14: Environment Cleanup
+
+```bash
+# When feature is complete
+git commit -m "Clean up development environment
+
+odmd: delete"
+
+git push origin feature/payment-integration
+```
+
+---
+
+## 🏭 Production Deployment
+
+### Step 15: Immutable Production Releases
+
+```bash
+# Create production release
+git checkout main
+git pull origin main
+git tag -a v1.2.0 -m "Release v1.2.0: Payment integration"
+git push origin v1.2.0
+```
+
+Update contracts for production deployment:
+
+```typescript
+// lib/repos/coffee-shop/coffee-shop-foundation-cdk.ts
+protected initializeEnvers(): void {
+    // Development environment
+    this._theOne = new CoffeeShopFoundationEnver(
+        this, this.contracts.accounts.workspace1, 'us-west-1',
+        new SRC_Rev_REF('b', 'main')  // Branch: incremental
+    );
+    
+    // Production environment  
+    this._prod = new CoffeeShopFoundationEnver(
+        this, this.contracts.accounts.workspace1, 'us-west-1',
+        new SRC_Rev_REF('t', 'v1.2.0')  // Tag: immutable
+    );
+    
+    this._envers = [this._theOne, this._prod];
+}
+```
+
+### Step 16: Blue-Green Deployment
+
+```bash
+# Deploy new version alongside existing
+git commit -m "Deploy production v1.2.0 alongside v1.1.0 for validation"
+
+# Platform creates both environments:
+# - coffee-shop-foundation-v1.1.0 (current production)
+# - coffee-shop-foundation-v1.2.0 (new version)
+
+# Validate new version
+curl -H "Authorization: Bearer ${PROD_TOKEN}" \
+  "https://api-v1-2-0.coffee-shop.prod/health"
+
+# Switch traffic (update DNS/load balancer)
+# Remove old version when confident
+```
+
+---
+
+## 📊 Operations & Monitoring  
+
+### Step 17: Observability Stack
+
+```typescript
+// Built-in monitoring via CDK
+export class CoffeeShopFoundationStack extends Stack {
+    constructor(scope: Construct, id: string, props?: StackProps) {
+        super(scope, id, props);
+        
+        // ... resource definitions ...
+        
+        // 📊 CloudWatch Dashboard
+        const dashboard = new Dashboard(this, 'CoffeeShopDashboard', {
+            dashboardName: `coffee-shop-${this.enverName}-monitoring`
+        });
+        
+        dashboard.addWidgets(
+            new GraphWidget({
+                title: 'EventBridge Message Volume',
+                left: [eventBus.metricEventCount()],
+                width: 12
+            }),
+            new GraphWidget({
+                title: 'DynamoDB Read/Write Capacity',
+                left: [
+                    configTable.metricConsumedReadCapacityUnits(),
+                    configTable.metricConsumedWriteCapacityUnits()
+                ],
+                width: 12
+            })
+        );
+        
+        // 🚨 CloudWatch Alarms
+        new Alarm(this, 'HighEventBridgeErrors', {
+            metric: eventBus.metricFailedInvocations(),
+            threshold: 10,
+            evaluationPeriods: 2,
+            treatMissingData: TreatMissingData.NOT_BREACHING
+        });
+        
+        // 🔍 X-Ray Tracing
+        const tracingConfig = {
+            mode: TracingMode.ACTIVE,
+            sampling: {
+                rate: 0.1,  // 10% sampling
+                reservoir: 2
+            }
+        };
+    }
+}
+```
+
+### Step 18: Centralized Logging
+
+```typescript
+// Centralized logging configuration
+const logGroup = new LogGroup(this, 'ServiceLogs', {
+    logGroupName: `/aws/coffee-shop/${this.enverName}/application`,
+    retention: RetentionDays.TWO_WEEKS,
+    removalPolicy: RemovalPolicy.DESTROY
+});
+
+// Structured logging format
+const logger = {
+    level: 'INFO',
+    format: 'JSON',
+    fields: {
+        timestamp: true,
+        level: true,
+        enver: this.enverName,
+        service: 'coffee-shop-foundation',
+        traceId: true
+    }
+};
+```
+
+### Step 19: Health Checks & SLIs
+
+```typescript
+// Health check endpoints
+const healthCheckLambda = new Function(this, 'HealthCheck', {
+    runtime: Runtime.NODEJS_18_X,
+    handler: 'health.handler',
+    code: Code.fromInline(`
+        exports.handler = async (event) => {
+            const checks = await Promise.all([
+                checkEventBridge(),
+                checkDynamoDB(),
+                checkDependencies()
+            ]);
+            
+            return {
+                statusCode: checks.every(c => c.healthy) ? 200 : 503,
+                body: JSON.stringify({
+                    service: 'coffee-shop-foundation',
+                    enver: '${this.enverName}',
+                    timestamp: new Date().toISOString(),
+                    checks: checks
+                })
+            };
+        };
+    `)
+});
+
+// Service Level Indicators (SLIs)
+const sliDashboard = new Dashboard(this, 'SLIDashboard', {
+    widgets: [
+        new SingleValueWidget({
+            title: 'Availability (99.9% SLO)',
+            metrics: [healthCheckLambda.metricSuccessRate()],
+            width: 6
+        }),
+        new SingleValueWidget({
+            title: 'Latency P99 (<100ms SLO)',
+            metrics: [api.metricLatency({ statistic: 'p99' })],
+            width: 6
+        })
+    ]
+});
+```
+
+---
+
+## 🎯 Advanced Patterns
+
+### Step 20: Multi-Region Deployment
+
+```typescript
+// contracts definition for multi-region
+export class CoffeeShopFoundationCdk extends OdmdBuild<CoffeeShopFoundationEnver> {
+    protected initializeEnvers(): void {
+        // Primary region
+        this._primary = new CoffeeShopFoundationEnver(
+            this, this.contracts.accounts.workspace1, 'us-west-1',
+            new SRC_Rev_REF('b', 'main')
+        );
+        
+        // Disaster recovery region
+        this._dr = new CoffeeShopFoundationEnver(
+            this, this.contracts.accounts.workspace1, 'us-east-1',
+            new SRC_Rev_REF('b', 'main')
+        );
+        
+        this._envers = [this._primary, this._dr];
+    }
+}
+```
+
+### Step 21: Canary Deployments
+
+```typescript
+// Canary deployment configuration
+const canaryDeployment = new CfnDeploymentConfig(this, 'CanaryConfig', {
+    deploymentConfigName: 'CoffeeShopCanary10Percent5Minutes',
+    trafficRoutingConfig: {
+        type: 'TimeBasedCanary',
+        timeBasedCanary: {
+            canaryPercentage: 10,
+            canaryInterval: 5
+        }
+    },
+    autoRollbackConfiguration: {
+        enabled: true,
+        events: ['DEPLOYMENT_FAILURE', 'DEPLOYMENT_STOP_ON_ALARM']
+    }
+});
+```
+
+### Step 22: Cost Optimization
+
+```typescript
+// Cost optimization strategies
+export class CoffeeShopFoundationStack extends Stack {
+    constructor(scope: Construct, id: string, props?: StackProps) {
+        super(scope, id, props);
+        
+        // 💰 DynamoDB On-Demand for variable workloads
+        const configTable = new Table(this, 'ConfigTable', {
+            billingMode: BillingMode.PAY_PER_REQUEST,  // No capacity planning needed
+        });
+        
+        // 💰 Lambda with ARM processors (better price/performance)
+        const orderProcessor = new Function(this, 'OrderProcessor', {
+            runtime: Runtime.NODEJS_18_X,
+            architecture: Architecture.ARM_64,  // Up to 20% cost savings
+        });
+        
+        // 💰 Scheduled scaling for predictable patterns
+        const api = new RestApi(this, 'OrderAPI', {
+            deployOptions: {
+                throttle: {
+                    rateLimit: 1000,    // Prevent cost spikes
+                    burstLimit: 2000
+                }
+            }
+        });
+        
+        // 💰 Resource tagging for cost attribution
+        Tags.of(this).add('Service', 'coffee-shop-foundation');
+        Tags.of(this).add('Environment', this.enverName);
+        Tags.of(this).add('CostCenter', 'engineering');
     }
 }
 ```
 
 ---
 
-## Platform Integration Phase
+## 🔧 Troubleshooting Guide
 
-### Step 5: CDK App Integration
+### Common Issues & Solutions
 
-Each service integrates with the ONDEMANDENV platform:
+#### 🔴 **Dependency Resolution Failures**
 
-```typescript
-// coffee-shop--foundation/bin/coffee-shop--foundation.ts
-#!/usr/bin/env node
-import 'source-map-support/register';
-import * as cdk from 'aws-cdk-lib';
-import {CoffeeShopFoundationStack} from "../lib/coffee-shop--foundation-stack";
-import {OndemandContractsSandbox} from "@ondemandenv/odmd-contracts-sandbox";
-import {OdmdEnverCdk} from "@ondemandenv/contracts-lib-base";
+**Symptom**: Service deployment fails with "Consumer dependency not found"
 
-const app = new cdk.App();
+**Solution**:
+```bash
+# Check if dependency Enver is deployed
+aws ssm get-parameters-by-path \
+  --path "/ondemandenv/products/coffee-shop-foundation-main/" \
+  --recursive
 
-async function main() {
-    const buildRegion = process.env.CDK_DEFAULT_REGION;
-    const buildAccount = process.env.CDK_DEFAULT_ACCOUNT;
-    
-    const props = {
-        env: { account: buildAccount, region: buildRegion }
-    };
+# Verify contract definitions
+npm run test:contracts
 
-    // Initialize the contracts system
-    new OndemandContractsSandbox(app)
-    
-    // Platform determines which Enver to deploy based on:
-    // - Git branch/tag (from CI/CD context)
-    // - Target account/region (from contracts)
-    const targetEnver = OndemandContractsSandbox.inst.getTargetEnver() as OdmdEnverCdk
-    
-    // Deploy with platform-generated unique stack name
-    new CoffeeShopFoundationStack(app, targetEnver.getRevStackNames()[0], props)
-}
+# Force dependency redeployment
+git commit -m "Redeploy foundation dependency
 
-main().catch(e => {
-    console.error(e)
-    throw e
-})
+odmd: redeploy@coffee-shop-foundation-main"
 ```
 
-### Step 6: Platform Dependency Resolution
+#### 🔴 **Cross-Account Permission Issues**
 
-When a service deploys, the platform:
+**Symptom**: "Access Denied" errors during deployment
 
-1. **Reads Contracts**: Analyzes dependency graph from ContractsLib
-2. **Resolves Dependencies**: Fetches published values from config store (SSM Parameter Store)
-3. **Injects Values**: Provides concrete values via `getSharedValue()` calls
-4. **Ensures Isolation**: Uses unique naming based on Enver identity
+**Solution**:
+```bash
+# Verify IAM role trust relationships
+aws sts assume-role \
+  --role-arn "arn:aws:iam::590184130740:role/ODMDWorkspaceRole" \
+  --role-session-name "debug-session"
 
-```typescript
-// Platform resolution process (conceptual)
-const dependencies = {
-    'eventBus': 'coffee-shop-event-bus-master-abc123',
-    'configTableName': 'configTable-master-abc123',
-    'countTableName': 'countingTable-master-abc123'
-}
+# Check CloudTrail for permission denials
+aws logs filter-log-events \
+  --log-group-name "/aws/cloudtrail/management-events" \
+  --filter-pattern "{ $.errorCode = \"AccessDenied\" }"
+```
 
-// Injected at runtime into consuming services
-myEnver.eventBus.getSharedValue(this) // Returns: 'coffee-shop-event-bus-master-abc123'
+#### 🔴 **Environment Naming Conflicts**
+
+**Symptom**: Resource already exists errors
+
+**Solution**:
+```bash
+# Check existing resources
+aws cloudformation list-stacks \
+  --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
+
+# Clean up orphaned resources
+aws cloudformation delete-stack \
+  --stack-name "coffee-shop-foundation-feature-old-branch"
+```
+
+#### 🔴 **Contract Validation Errors**
+
+**Symptom**: TypeScript compilation errors in contracts
+
+**Solution**:
+```bash
+# Run contract validation
+npm run test:contracts
+
+# Fix circular dependencies
+npm run build:dependency-graph
+
+# Validate against base contracts
+npm run validate:base-compatibility
+```
+
+### Debugging Commands
+
+#### Environment Status
+```bash
+# Check Enver deployment status
+curl -H "Authorization: Bearer ${TOKEN}" \
+  "https://api.ondemandenv.dev/envers/coffee-shop-foundation-main/status"
+
+# View deployment logs
+aws logs tail "/aws/codebuild/coffee-shop-foundation" --follow
+```
+
+#### Dependency Tracing
+```bash
+# Trace dependency chain
+ondemandenv trace-dependencies \
+  --enver coffee-shop-order-manager-main \
+  --format json
+
+# Visualize dependency graph
+ondemandenv graph-dependencies \
+  --output dependency-graph.svg
+```
+
+#### Performance Analysis
+```bash
+# Analyze deployment performance
+aws cloudformation describe-stack-events \
+  --stack-name coffee-shop-foundation-main \
+  --query 'StackEvents[?ResourceStatus==`CREATE_COMPLETE`].[Timestamp,LogicalResourceId,ResourceType]' \
+  --output table
+
+# Check resource utilization
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/Lambda \
+  --metric-name Duration \
+  --dimensions Name=FunctionName,Value=coffee-shop-foundation-main-processor
 ```
 
 ---
 
-## Development Workflow
+## 🎉 Summary
 
-### Developer Daily Workflow
+This comprehensive SDLC guide demonstrates how ONDEMANDENV transforms distributed system complexity into manageable, code-driven architecture:
 
-#### 1. Feature Development
+### ✅ **Key Achievements**
+- **🏗️ Architecture as Code**: Complete system defined in TypeScript contracts
+- **🔗 Explicit Dependencies**: No hidden coupling between services
+- **🌍 Cross-Account Security**: Automatic IAM and permission management
+- **⚡ On-Demand Environments**: Instant isolated environments for any feature
+- **🚀 Production Ready**: Immutable deployments with rollback capabilities
+- **📊 Built-in Observability**: Comprehensive monitoring and alerting
 
-```bash
-# Developer starts new feature
-git checkout -b feature/payment-validation
-# Make code changes...
-git add .
-git commit -m "Add payment validation logic
+### 🔄 **Developer Experience**
+- **Instant Feedback**: Deploy complete environments in minutes
+- **Safe Experimentation**: Isolated environments prevent conflicts
+- **Clear Boundaries**: AI-assisted development with architectural guidance
+- **Automated Operations**: Platform handles complex AWS orchestration
 
-odmd: create@master"
-git push origin feature/payment-validation
-```
+### 📈 **Business Benefits**
+- **Faster Time to Market**: Parallel development without blocking
+- **Reduced Operational Overhead**: Platform abstracts complexity
+- **Improved Reliability**: Immutable infrastructure and dependency management
+- **Cost Optimization**: Efficient resource usage and right-sizing
 
-#### 2. Platform Automatic Response
-
-The platform detects the `odmd: create@master` command and:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ ONDEMANDENV Platform Actions                                │
-├─────────────────────────────────────────────────────────────┤
-│ 1. Create new Enver: feature-payment-validation            │
-│ 2. Copy dependency versions from master Enver              │
-│ 3. Deploy Foundation clone:                                 │
-│    • coffee-shop-event-bus-feature-payment-validation      │
-│    • configTable-feature-payment-validation                │
-│    • countingTable-feature-payment-validation              │
-│ 4. Deploy Order Manager clone:                             │
-│    • Automatically connects to cloned Foundation           │
-│    • orderTable-feature-payment-validation                 │
-│ 5. Deploy Order Processor clone:                           │
-│    • Automatically connects to cloned Foundation           │
-│ 6. Provide developer with endpoints and access info        │
-└─────────────────────────────────────────────────────────────┘
-```
-
-#### 3. Isolated Testing
-
-Developer now has a complete, isolated environment:
-
-```bash
-# Environment URLs provided by platform
-export ORDER_API_URL="https://api-feature-payment-validation.coffee-shop.dev"
-export ORDER_PROCESSOR_URL="https://processor-feature-payment-validation.coffee-shop.dev"
-
-# Run integration tests
-npm run test:integration
-
-# Manual testing
-curl -X POST $ORDER_API_URL/orders -d '{"item": "latte", "size": "large"}'
-```
-
-#### 4. Cleanup
-
-```bash
-# When feature is complete
-git commit -m "Feature complete, ready for merge
-
-odmd: delete"
-git push origin feature/payment-validation
-
-# Platform automatically destroys all cloned resources
-# Merge to master via Pull Request
-```
-
-### Team Collaboration
-
-#### Multiple Developers Working Simultaneously
-
-```
-master branch (stable)
-├── Foundation Enver (shared dependencies)
-├── Order Manager Enver
-└── Order Processor Enver
-
-feature/payment-validation (Developer A)
-├── Foundation Clone A
-├── Order Manager Clone A  
-└── Order Processor Clone A
-
-feature/mobile-app (Developer B)  
-├── Foundation Clone B
-├── Order Manager Clone B
-└── Order Processor Clone B
-
-feature/inventory-mgmt (Developer C)
-├── Foundation Clone C
-├── Order Manager Clone C
-└── Order Processor Clone C
-```
-
-Each developer works in complete isolation with zero conflicts.
+**ONDEMANDENV enables true microservice agility by making distributed system complexity manageable through explicit contracts, automated orchestration, and on-demand environments.**
 
 ---
 
-## Production Deployment
+## 📚 Next Steps
 
-### Immutable Production Releases
+- **[Explore the Live Demo](https://web.auth.ondemandenv.link/?region=us-west-1)**: See the coffee shop system in action
+- **[Read Platform Documentation](https://ondemandenv.dev/documentation)**: Complete setup and configuration guide  
+- **[Study Implementation Examples](../coffee-shop--foundation)**: Dive into actual service code
+- **[Join the Community](https://github.com/ondemandenv)**: Contribute to the platform evolution
 
-#### 1. Create Production Release
-
-```bash
-# Create release tag
-git tag -a v1.0.0 -m "Production release v1.0.0"
-git push origin v1.0.0
-```
-
-#### 2. Update Contracts for Production
-
-```typescript
-// In contracts-sandbox, create immutable Enver
-const coffeeShopFoundationProd = new CoffeeShopFoundationEnver(
-    this, 
-    this.contracts.accounts.workspace1, 
-    'us-west-1',
-    new SRC_Rev_REF('t', 'v1.0.0')  // Tag-based (immutable) Enver
-);
-
-// Tag Envers can only consume from other Tag Envers
-// This ensures complete immutability and reproducibility
-```
-
-#### 3. Deployment Pipeline
-
-```yaml
-# .github/workflows/production-deploy.yml
-name: Production Deploy
-on:
-  push:
-    tags: ['v*']
-
-jobs:
-  deploy-foundation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy Foundation
-        run: |
-          # Platform automatically:
-          # 1. Recognizes tag-based deployment
-          # 2. Ensures all dependencies are immutable
-          # 3. Deploys to production account
-          # 4. Publishes versioned products
-          npx cdk deploy --require-approval never
-          
-  deploy-services:
-    needs: deploy-foundation
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [order-manager, order-processor]
-    steps:
-      - name: Deploy {{ matrix.service }}
-        run: |
-          # Platform automatically resolves production dependencies
-          # Services consume exact versioned products from foundation
-          npx cdk deploy --require-approval never
-```
-
-### Blue/Green Deployments
-
-```typescript
-// Define multiple production Envers
-const coffeeShopFoundationBlue = new CoffeeShopFoundationEnver(/*blue config*/);
-const coffeeShopFoundationGreen = new CoffeeShopFoundationEnver(/*green config*/);
-
-// Traffic routing Enver controls which version receives traffic
-const routingEnver = new TrafficRoutingEnver(this, 'ProductionRouting', {
-    blueEndpoint: coffeeShopFoundationBlue.apiEndpoint,
-    greenEndpoint: coffeeShopFoundationGreen.apiEndpoint,
-    trafficSplit: { blue: 90, green: 10 }  // Canary deployment
-});
-```
-
----
-
-## Operations and Monitoring
-
-### Environment Visibility
-
-The platform provides comprehensive visibility:
-
-```bash
-# List all environments
-odmd env list
-
-OUTPUT:
-┌──────────────────────────┬─────────────┬──────────────┬────────────┐
-│ Environment              │ Type        │ Status       │ Resources  │
-├──────────────────────────┼─────────────┼──────────────┼────────────┤
-│ coffee-shop-master       │ Branch      │ Healthy      │ 12         │
-│ coffee-shop-v1.0.0       │ Tag         │ Healthy      │ 12         │
-│ coffee-shop-feature-pay  │ Clone       │ Healthy      │ 12         │
-│ coffee-shop-feature-mob  │ Clone       │ Deploying    │ 8          │
-└──────────────────────────┴─────────────┴──────────────┴────────────┘
-
-# Check specific environment
-odmd env describe coffee-shop-feature-pay
-
-OUTPUT:
-Environment: coffee-shop-feature-pay
-Type: Clone (from master)
-Created: 2024-01-15 10:30:00
-Dependencies:
-  ├── Foundation: coffee-shop-foundation-feature-pay
-  ├── Order Manager: coffee-shop-order-mgr-feature-pay  
-  └── Order Processor: coffee-shop-order-proc-feature-pay
-
-Resources:
-  ├── EventBridge: coffee-shop-event-bus-feature-pay
-  ├── DynamoDB: configTable-feature-pay
-  ├── DynamoDB: countingTable-feature-pay
-  ├── DynamoDB: orderTable-feature-pay
-  └── Step Functions: ServerlesspressoStateMachine-feature-pay
-
-Endpoints:
-  ├── Order API: https://api-feature-pay.coffee-shop.dev
-  └── Processor: https://processor-feature-pay.coffee-shop.dev
-```
-
-### Cost Management
-
-```bash
-# Cost breakdown by environment
-odmd cost breakdown --timeframe 7d
-
-OUTPUT:
-┌──────────────────────────┬──────────────┬─────────────┬────────────┐
-│ Environment              │ Daily Avg    │ 7-Day Total │ Trend      │
-├──────────────────────────┼──────────────┼─────────────┼────────────┤
-│ coffee-shop-master       │ $12.50       │ $87.50      │ ↗ +5%      │
-│ coffee-shop-v1.0.0       │ $15.20       │ $106.40     │ → stable   │
-│ coffee-shop-feature-*    │ $3.20        │ $22.40      │ ↘ -10%     │
-└──────────────────────────┴──────────────┴─────────────┴────────────┘
-
-# Automatic cleanup recommendations
-odmd cleanup recommendations
-
-OUTPUT:
-Cleanup Recommendations:
-├── coffee-shop-feature-old-ui (idle 14 days) - Save $22/day
-├── coffee-shop-feature-archived (idle 30 days) - Save $18/day
-└── coffee-shop-test-branch (failed deploy) - Save $8/day
-
-Total potential savings: $48/day
-```
-
-### Health Monitoring
-
-```typescript
-// Built-in health checks per Enver
-const healthCheck = new HealthCheck(this, 'EnverHealth', {
-    enver: myEnver,
-    checks: [
-        new ResourceHealthCheck('DynamoDB', configTable),
-        new ResourceHealthCheck('EventBridge', eventBus),
-        new EndpointHealthCheck('API', orderApiUrl),
-        new DependencyHealthCheck('Foundation', foundationEnver)
-    ]
-});
-
-// Platform-wide dependency monitoring
-const dependencyMonitor = new DependencyMonitor(this, 'DepMonitor', {
-    alertOnCircularDeps: true,
-    alertOnMissingDeps: true,
-    alertOnVersionSkew: true
-});
-```
-
----
-
-## Advanced Patterns
-
-### Cross-Account Service Mesh
-
-```typescript
-// Services across different accounts
-const networkingEnver = new NetworkingEnver(this, accounts.networking, 'us-west-1');
-const eksEnver = new EksEnver(this, accounts.workspace0, 'us-west-1', {
-    consumes: [networkingEnver.vpcConfig]
-});
-const appEnver = new AppEnver(this, accounts.workspace1, 'us-west-1', {
-    consumes: [eksEnver.clusterConfig, networkingEnver.subnetConfig]
-});
-
-// Platform handles all cross-account IAM complexity
-```
-
-### Multi-Region Deployments
-
-```typescript
-// Same contracts, multiple regions
-const usWestEnver = new CoffeeShopFoundationEnver(this, accounts.workspace1, 'us-west-1');
-const usEastEnver = new CoffeeShopFoundationEnver(this, accounts.workspace1, 'us-east-1');
-const euWestEnver = new CoffeeShopFoundationEnver(this, accounts.workspace1, 'eu-west-1');
-
-// Global routing Enver coordinates traffic
-const globalRouter = new GlobalRoutingEnver(this, {
-    regions: [
-        { enver: usWestEnver, weight: 40 },
-        { enver: usEastEnver, weight: 40 },
-        { enver: euWestEnver, weight: 20 }
-    ]
-});
-```
-
-### Integration Testing Environments
-
-```typescript
-// Create test environments with specific configurations
-const loadTestEnver = new CoffeeShopFoundationEnver(this, accounts.workspace1, 'us-west-1', {
-    scalingConfig: { minCapacity: 10, maxCapacity: 100 },
-    testData: TestDataSet.LOAD_TEST
-});
-
-const e2eTestEnver = new CoffeeShopFoundationEnver(this, accounts.workspace1, 'us-west-1', {
-    scalingConfig: { minCapacity: 1, maxCapacity: 5 },
-    testData: TestDataSet.E2E_TEST
-});
-```
-
----
-
-## Summary
-
-ONDEMANDENV transforms the development lifecycle by:
-
-1. **Codifying Architecture**: All service relationships defined in TypeScript
-2. **Automating Dependencies**: Platform handles complex resolution and injection
-3. **Enabling Isolation**: Developers get full-stack environments instantly
-4. **Simplifying Operations**: Unified visibility and management across environments
-5. **Scaling Teams**: Zero coordination needed for parallel development
-
-The coffee shop example demonstrates how microservices can be developed, deployed, and operated with minimal complexity while maintaining full control and visibility across the entire system lifecycle.
-
-### Next Steps
-
-1. **Explore the Code**: Check out the actual implementation in each service repository
-2. **Try On-Demand Cloning**: Create your own feature branch and add `odmd: create@master`
-3. **Extend the System**: Add new services following the same contract patterns
-4. **Monitor and Optimize**: Use the platform tools to understand costs and performance
-
-For more details, visit the [ONDEMANDENV documentation](https://ondemandenv.dev) or explore the [GitHub organization](https://github.com/ondemandenv). 
+**Ready to transform your distributed system architecture? Let's make complexity manageable.** 
