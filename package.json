@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.93",
+  "version": "0.0.94",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -28,7 +28,7 @@
   },
   "peerDependencies": {
     "constructs": "^10.0.0",
-    "aws-cdk-lib": "2.200.1"
+    "aws-cdk-lib": "2.203.1"
   },
   "scripts": {
     "build": "tsc --build",
