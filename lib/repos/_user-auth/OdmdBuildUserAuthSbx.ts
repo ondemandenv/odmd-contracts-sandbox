@@ -1,14 +1,14 @@
 import {
-    SRC_Rev_REF
-} from "@ondemandenv/contracts-lib-base";
-import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {
+    SRC_Rev_REF,
     OdmdBuildUserAuth,
-    OdmdEnverUserAuth
-} from "@ondemandenv/contracts-lib-base/lib/repos/__user-auth/odmd-build-user-auth";
-import {IOdmdEnver} from "@ondemandenv/contracts-lib-base/lib/model/odmd-enver";
+    OdmdEnverUserAuth,
+    IOdmdEnver
+} from "@ondemandenv.dev/contracts-lib-base";
+import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
+import * as path from "path";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
@@ -19,21 +19,7 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
     readonly owner: OdmdBuildUserAuthSbx;
 
-    wireConsuming() {
-        /*
-        this.owner.contracts.visLlmOdmdData.envers
-            .forEach(e => {
-                this.callbackUrls.push(new OdmdCrossRefConsumer(this, e.callbackUrl.node.id, e.callbackUrl, {
-                    defaultIfAbsent: `https://tst.ondemandenv.dev:5173/callback/${e.owner.buildId}/${e.targetRevision.value}`,
-                    trigger: 'no'
-                }))
-                this.logoutUrls.push(new OdmdCrossRefConsumer(this, e.logoutUrl.node.id, e.logoutUrl, {
-                    defaultIfAbsent: `https://tst.ondemandenv.dev:5173/logout/${e.owner.buildId}/${e.targetRevision.value}`,
-                    trigger: 'no'
-                }))
-            })
-        */
-    }
+
 
 
     getRevStackNames(): Array<string> {
@@ -44,9 +30,8 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
 
 export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
-    get envers(): OdmdEnverUserAuthSbx[] {
-        return this._envers as OdmdEnverUserAuthSbx[];
-    }
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
 
     ownerEmail?: string | undefined;
 
@@ -64,7 +49,5 @@ export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
         return this.node.scope as OndemandContractsSandbox;
     }
 
-    wireConsuming() {
-        this.envers.forEach(e => e.wireConsuming())
-    }
+
 }

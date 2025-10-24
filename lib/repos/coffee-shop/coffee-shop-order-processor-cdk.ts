@@ -3,11 +3,13 @@ import {
     OdmdCrossRefConsumer,
     OdmdEnverCdk,
     SRC_Rev_REF
-} from "@ondemandenv/contracts-lib-base";
+} from "@ondemandenv.dev/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import {CoffeeShopFoundationEnver} from "./coffee-shop-foundation-cdk";
+import * as path from "path"
 
 export class CoffeeShopOrderProcessorEnver extends OdmdEnverCdk {
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
     constructor(owner: CoffeeShopOrderProcessorCdk, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -28,7 +30,9 @@ export class CoffeeShopOrderProcessorEnver extends OdmdEnverCdk {
 }
 
 export class CoffeeShopOrderProcessorCdk extends OdmdBuild<OdmdEnverCdk> {
-    private _envers: Array<CoffeeShopOrderProcessorEnver>;
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    protected _envers: Array<CoffeeShopOrderProcessorEnver>;
     get envers(): Array<CoffeeShopOrderProcessorEnver> {
         return this._envers;
     }

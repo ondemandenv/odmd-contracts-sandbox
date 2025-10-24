@@ -5,10 +5,13 @@ import {
     OdmdEnverCdk, OdmdEnverCtnImg,
     OdmdEnverEksCluster,
     SRC_Rev_REF
-} from "@ondemandenv/contracts-lib-base";
+} from "@ondemandenv.dev/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
+import {OdmdBuildEksSbx, EksClusterEnverSbx} from "../../repos/_eks/odmd-build-eks-sbx";
+import * as path from "path"
 
 export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCtlThruCentral {
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
     constructor(owner: SampleSpringOpenApi3Cdk, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
         this.appImgRepoRef = new OdmdCrossRefConsumer(this, 'appImgRefProducer',
@@ -22,7 +25,7 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
                 {pathPart: 'swagger-ui'}
             ]
         })
-        const eksClusterEnverSbx = owner.contracts.eksCluster!.envers[0];
+        const eksClusterEnverSbx = (owner.contracts.eksCluster! as OdmdBuildEksSbx).envers[0];
         this.targetEksClusterEndpoint = new OdmdCrossRefConsumer(this, 'targetEksClusterEndpoint', eksClusterEnverSbx.clusterEndpoint,
             {trigger: 'directly', defaultIfAbsent: 'https://abc123.us-east-1.eks.amazonaws.com' })
         this.oidcProvider = new OdmdCrossRefConsumer(this, 'oidcProviderArn', eksClusterEnverSbx.oidcProvider,
@@ -43,8 +46,10 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
 }
 
 export class SampleSpringOpenApi3Cdk extends OdmdBuild<OdmdEnverCdk> {
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
 
-    private _envers: Array<SampleSpringOpenApi3CdkEnver>
+    protected _envers: Array<SampleSpringOpenApi3CdkEnver>
     get envers(): Array<SampleSpringOpenApi3CdkEnver> {
         return this._envers
     }

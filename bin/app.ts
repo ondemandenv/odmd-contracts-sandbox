@@ -2,9 +2,6 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import {OndemandContractsSandbox} from "../lib/OndemandContractsSandbox";
-import {Stack} from "aws-cdk-lib";
-import {AnyOdmdEnVer} from "@ondemandenv/contracts-lib-base";
-
 
 const app = new cdk.App({autoSynth: false});
 
@@ -16,16 +13,7 @@ async function main() {
         throw new Error("buildRegion>" + buildRegion + "; buildAccount>" + buildAccount)
     }
 
-    new OndemandContractsSandbox(app)
-    new Stack(app, 'dummy')
-    const csa = app.synth();
-
-    let contractsInst = OndemandContractsSandbox.inst;
-    const targetEnver = contractsInst.getTargetEnver('sampleSpringOpenAPI3cdk', 'b..master' ) as AnyOdmdEnVer
-
-    console.log("targetEnver>" + targetEnver)
-
-
+    new OndemandContractsSandbox(app);
 }
 
 

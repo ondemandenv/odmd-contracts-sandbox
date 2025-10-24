@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.0.94",
+  "version": "0.1.1",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -10,7 +10,7 @@
     "registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@ondemandenv/contracts-lib-base": "0.0.76"
+    "@ondemandenv.dev/contracts-lib-base": "0.1.10"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
@@ -24,22 +24,23 @@
     "js-yaml": "^4.1.0",
     "@types/js-yaml": "^4.0.9",
     "cross-env": "^7.0.3",
-    "glob": "^11.0.0"
+    "glob": "^11.0.0",
+    "cpx": "^1.5.0"
   },
   "peerDependencies": {
     "constructs": "^10.0.0",
     "aws-cdk-lib": "2.203.1"
   },
   "scripts": {
-    "build": "tsc --build",
+    "prebuild": "ts-node .scripts/generate-exports.ts",
+    "build": "tsc --build &&  cpx \"lib/repos/**/docs/**/*\" dist/lib/repos || true",
     "watch": "tsc --build -w",
-    "clean": "tsc --build --clean",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "audit": "npm audit fix",
-    "test": "tsc --build --clean && tsc --build && cross-env ODMD_rev_ref=b..odmdSbxUsw1 CDK_DEFAULT_ACCOUNT=123 CDK_DEFAULT_REGION=us-west-1 CDK_CLI_VERSION=2.164.1  jest  --verbose --detectOpenHandles --forceExit",
-    "buildversion": "tsc --build && npm version patch",
-    "cdk-ls": "tsc --build --clean && tsc --build && cross-env ODMD_build_id=spring-rds-img ODMD_rev_ref=b..odmdSbxUsw1 cdk ls --profile sandbox-workspace2",
-    "cdk-ls1": "tsc --build --clean && tsc --build && cdk ls --profile sandbox-workspace2",
-    "pubpub": "tsc --build --clean && tsc --build && npm run cdk-ls && npm publish",
+    "test": "npm run clean && npm run build &&  cross-env ODMD_rev_ref=b..main CDK_DEFAULT_ACCOUNT=123 CDK_DEFAULT_REGION=us-west-1 CDK_CLI_VERSION=2.164.1  jest  --verbose --detectOpenHandles --forceExit",
+    "buildversion": "npm run build && npm version patch",
+    "cdk-ls": "npm run build && cross-env ODMD_build_id=spring-rds-img ODMD_rev_ref=b..odmdSbxUsw1 cdk ls --profile sandbox-workspace2",
+    "pubpub": "npm run build && npm run cdk-ls && npm publish",
     "login": "npm login",
     "generate-exports": "ts-node .scripts/generate-exports.ts"
   }

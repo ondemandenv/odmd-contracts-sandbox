@@ -7,14 +7,13 @@ import {App} from "aws-cdk-lib";
 import {
     AccountsCentralView,
     GithubReposCentralView,
-} from "@ondemandenv/contracts-lib-base/lib/OdmdContractsCentralView";
-import {
-    GithubRepo, OdmdBuildNetworking,
-    OndemandContracts
-} from "@ondemandenv/contracts-lib-base";
+    GithubRepo,
+    OndemandContracts, OdmdBuildNetworking
+} from "@ondemandenv.dev/contracts-lib-base";
 import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx";
-import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
+import {OdmdBuildNtSbx} from "./repos/_nt/odmd-build-nt-sbx";
+import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -31,84 +30,39 @@ export type AccountsSbx = AccountsCentralView & {
 
 
 export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, GithubReposSbx, OdmdBuildContractsSbx> {
-
     createContractsLibBuild(): OdmdBuildContractsSbx {
-        return new OdmdBuildContractsSbx(this)
-    }
-
-    protected initializeUserAuth() {
-        this._userAuth = new OdmdBuildUserAuthSbx(this)
-    }
-
-
-    protected initializeEksCluster() {
-        this._eksCluster = new OdmdBuildEksSbx(this);
-    }
-
-    private static _inst: OndemandContractsSandbox
-    public static get inst(): OndemandContractsSandbox {
-        return this._inst
-    }
-
-
-    get userAuth(): OdmdBuildUserAuthSbx {
-        return super.userAuth! as OdmdBuildUserAuthSbx;
-    }
-
-    get eksCluster(): OdmdBuildEksSbx | undefined {
-        return super.eksCluster as OdmdBuildEksSbx;
-    }
-
-
-    protected initializeNetworking() {
-        this._networking = new OdmdBuildNetworking( this );
+        return new OdmdBuildContractsSbx(this);
     }
 
     constructor(app: App) {
         super(app, 'OndemandContractsSandbox');
-        if (OndemandContractsSandbox._inst) {
-            throw new Error('not allowed')
-        }
-        OndemandContractsSandbox._inst = this;
+    }
 
+    protected initializeBuilds(): void {
+        super.initializeBuilds();
         this.springOpen3Img = new SampleSpringOpenApi3Img(this)
         this.springOpen3Cdk = new SampleSpringOpenApi3Cdk(this)
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
-
-        this.userAuth.wireConsuming()
-
-        let tmpSet = new Set(this.odmdBuilds);
-        if (tmpSet.size != this.odmdBuilds.length) {
-            tmpSet.forEach(b => {
-                const i = this.odmdBuilds.indexOf(b)
-                this.odmdBuilds.splice(i, 1)
-            })
-
-            throw new Error('duplicated envers?!')
-        }
-
-        if (!process.env.CDK_CLI_VERSION) {
-            throw new Error("have to have process.env.CDK_CLI_VERSION!")
-        }
-
-        const buildRegion = process.env.CDK_DEFAULT_REGION;
-        let buildAccount: string;
-        if (process.env.CDK_DEFAULT_ACCOUNT) {
-            buildAccount = process.env.CDK_DEFAULT_ACCOUNT;
-        } else {
-            console.log(`process.env.CDK_DEFAULT_ACCOUNT undefined, trying to find account in CodeBuild with CODEBUILD_BUILD_ARN: ${process.env.CODEBUILD_BUILD_ARN}`)
-            if (!process.env.CODEBUILD_BUILD_ARN) {
-                throw new Error(`process.env.CODEBUILD_BUILD_ARN undefined, unable to initialize without account information.`)
-            }
-            buildAccount = process.env.CODEBUILD_BUILD_ARN!.split(":")[4];
-        }
-        if (!buildRegion || !buildAccount) {
-            throw new Error("buildRegion>" + buildRegion + "; buildAccount>" + buildAccount)
-        }
     }
 
+    protected initializeEksCluster(): void {
+        this._eksCluster = new OdmdBuildEksSbx(this);
+    }
+
+    protected initializeNetworking(): void {
+        this._networking = new OdmdBuildNtSbx(this);
+    }
+
+
+    protected initializeUserAuth() {
+        this._userAuth = new OdmdBuildUserAuthSbx(this)
+    }
+
+    get allAccounts(): string[] {
+        return Object.values(this.accounts);
+    }
 
     private _accounts: AccountsSbx
     get accounts(): AccountsSbx {
@@ -123,18 +77,9 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         return this._accounts
     }
 
-    private _allAccounts: string[]
-    get allAccounts(): string[] {
-        if (!this._allAccounts) {
-            const accEntries = Object.entries(this.accounts);
-            if (Array.from(accEntries.keys()).length != Array.from(accEntries.values()).length) {
-                throw new Error("Account name to number has to be 1:1!")
-            }
 
-            this._allAccounts = Object.values(this.accounts)
-
-        }
-        return this._allAccounts
+    get networking(): OdmdBuildNtSbx {
+        return this._networking! as OdmdBuildNtSbx
     }
 
     private _githubRepos: GithubReposSbx
@@ -204,11 +149,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     }
 
 
-    public readonly springOpen3Img
-    public readonly springOpen3Cdk
-    public readonly coffeeShopFoundationCdk
-    public readonly coffeeShopOrderProcessorCdk
-    public readonly coffeeShopOrderManagerCdk: CoffeeShopOrderManagerCdk
+    public springOpen3Img: SampleSpringOpenApi3Img
+    public springOpen3Cdk: SampleSpringOpenApi3Cdk
+    public coffeeShopFoundationCdk: CoffeeShopFoundationCdk
+    public coffeeShopOrderProcessorCdk: CoffeeShopOrderProcessorCdk
+    public coffeeShopOrderManagerCdk: CoffeeShopOrderManagerCdk
 
 
 }
