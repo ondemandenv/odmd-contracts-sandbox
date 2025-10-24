@@ -2,7 +2,7 @@
 set -ex
 
 echo "@ondemandenv:registry=https://npm.pkg.github.com/" >> .npmrc
-echo "//npm.pkg.github.com/:_authToken=$github_token" >> .npmrc
+echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> .npmrc
 
 ls -ltarh
 cat .npmrc
