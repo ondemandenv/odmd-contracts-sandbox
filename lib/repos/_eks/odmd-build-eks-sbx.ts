@@ -19,7 +19,7 @@ export class EksClusterEnverSbx extends OdmdEnverEksCluster implements WithVpc {
 
     constructor(owner: OdmdBuildEksSbx, id: string) {
         super(owner, owner.contracts.accounts.workspace0, 'us-west-1', new SRC_Rev_REF("b", 'main'));
-        const ipamWest2Le = owner.contracts.networking!.ipam_west2_le;
+        const ipamWest2Le = owner.contracts.networking!.ipam_west1_le;
         const adr = new OdmdIpAddresses(this, ipamWest2Le.ipamPoolName)
 
         this.vpcConfig = new OdmdVpc(adr, 'the-vpc');

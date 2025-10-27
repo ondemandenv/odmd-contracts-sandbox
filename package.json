@@ -1,6 +1,6 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "bin": {
     "cdk": "bin/cdk.js"
   },
@@ -40,8 +40,8 @@
     "test": "npm run clean && npm run build &&  cross-env ODMD_rev_ref=b..main CDK_DEFAULT_ACCOUNT=123 CDK_DEFAULT_REGION=us-west-1 CDK_CLI_VERSION=2.164.1  jest  --verbose --detectOpenHandles --forceExit",
     "buildversion": "npm run build && npm version patch",
     "cdk-ls": "npm run build && cross-env ODMD_build_id=spring-rds-img ODMD_rev_ref=b..odmdSbxUsw1 cdk ls --profile sandbox-workspace2",
-    "pubpub": "npm run build && npm run cdk-ls && npm publish",
-    "login": "npm login",
-    "generate-exports": "ts-node .scripts/generate-exports.ts"
+    "generate-exports": "ts-node .scripts/generate-exports.ts",
+    "pack-tgz": "npm run test && npm pack",
+    "pubpub": "npm run test && npm run cdk-ls && npm publish"
   }
 }

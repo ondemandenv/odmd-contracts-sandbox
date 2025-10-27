@@ -43,8 +43,14 @@ export class OdmdBuildContractsSbx extends OdmdBuildContractsLib<AccountsSbx, Gi
             new OdmdEnverContractsLibSeed(
                 this,
                 this.contracts.accounts.workspace0,
+                'us-west-2',
+                new SRC_Rev_REF("b", "__placeholder_us-west-2")
+            ),
+            new OdmdEnverContractsLibSeed(
+                this,
+                this.contracts.accounts.workspace0,
                 'us-east-1',
-                new SRC_Rev_REF("b", "__placeholder")
+                new SRC_Rev_REF("b", "__placeholder_us-east-1")
             )
         ];
     }
