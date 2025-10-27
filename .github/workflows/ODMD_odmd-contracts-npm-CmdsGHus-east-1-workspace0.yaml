@@ -38,7 +38,7 @@ jobs:
           trigger_message: ${{github.event.inputs.message}}
         env:
           ODMD_awsRegion: us-east-1
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ODMD_buildId: odmd-contracts-npm
           ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_east_1_workspace0'] }}
       
@@ -64,21 +64,14 @@ jobs:
           fi
           
         env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ODMD_buildId: odmd-contracts-npm
           ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_east_1_workspace0'] }}      
           
       - uses: ondemandenv/wflact-buildProduces@ondemandenv
         env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ODMD_buildId: odmd-contracts-npm
           ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_east_1_workspace0'] }}
-      
-      - uses: ondemandenv/wflact-aiAgentDev@ondemandenv
-        env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          ODMD_buildId: odmd-contracts-npm
-          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_east_1_workspace0'] }}
-          
 
 #
