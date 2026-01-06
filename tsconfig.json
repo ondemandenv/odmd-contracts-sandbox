@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "CommonJS",
     "lib": [
-      "es2020",
-      "dom"
+      "es2020"
+    ],
+    "outDir": "dist",
+    "rootDir": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "jest"
     ],
     "declaration": true,
     "strict": true,
@@ -24,9 +32,13 @@
       "./node_modules/@types"
     ]
   },
+  "include": [
+    "lib/**/*.ts",
+    "index.ts"
+  ],
   "exclude": [
     "node_modules",
-    "dist",
-    "cdk.out"
+    "cdk.out",
+    "dist"
   ]
 }
