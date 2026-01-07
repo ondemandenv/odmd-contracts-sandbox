@@ -1,7 +1,7 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
   "repository": "https://github.com/ondemandenv/odmd-contracts-sandbox.git",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
