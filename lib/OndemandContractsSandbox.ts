@@ -14,6 +14,7 @@ import {OdmdBuildContractsSbx} from "./repos/_contracts/odmd-build-contracts-sbx
 import {OdmdBuildEksSbx} from "./repos/_eks/odmd-build-eks-sbx";
 import {OdmdBuildNtSbx} from "./repos/_nt/odmd-build-nt-sbx";
 import {OdmdBuildUserAuthSbx} from "./repos/_user-auth/OdmdBuildUserAuthSbx";
+import {OdmdBuildCloudflareInfra} from "./repos/cloudflareinfra/cloudflare-infra";
 
 
 export type GithubReposSbx = GithubReposCentralView & {
@@ -22,6 +23,7 @@ export type GithubReposSbx = GithubReposCentralView & {
     CoffeeShopFoundationCdk: GithubRepo
     CoffeeShopOrderProcessorCdk: GithubRepo
     CoffeeShopOrderManagerCdk: GithubRepo
+    cloudflare: GithubRepo
 }
 
 export type AccountsSbx = AccountsCentralView & {
@@ -45,6 +47,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
         this.coffeeShopFoundationCdk = new CoffeeShopFoundationCdk(this)
         this.coffeeShopOrderProcessorCdk = new CoffeeShopOrderProcessorCdk(this)
         this.coffeeShopOrderManagerCdk = new CoffeeShopOrderManagerCdk(this)
+        this.cloudflareInfraPulumi = new OdmdBuildCloudflareInfra(this)
     }
 
     protected initializeEksCluster(): void {
@@ -142,6 +145,11 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
                     owner: 'ondemandenv',
                     name: 'coffee-shop--order-processor',
                     ghAppInstallID: 41561130
+                },
+                cloudflare: {
+                    owner: 'ondemandenv',
+                    name: 'cloudflare',
+                    ghAppInstallID: 41561130
                 }
             }
         }
@@ -154,6 +162,7 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     public coffeeShopFoundationCdk: CoffeeShopFoundationCdk
     public coffeeShopOrderProcessorCdk: CoffeeShopOrderProcessorCdk
     public coffeeShopOrderManagerCdk: CoffeeShopOrderManagerCdk
+    public cloudflareInfraPulumi: OdmdBuildCloudflareInfra
 
 
 }

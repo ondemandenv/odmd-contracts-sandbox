@@ -8,7 +8,7 @@ import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 import * as path from "path";
 
 export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     constructor(owner: OdmdBuildUserAuthSbx, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
 
@@ -30,8 +30,8 @@ export class OdmdEnverUserAuthSbx extends OdmdEnverUserAuth {
 
 
 export class OdmdBuildUserAuthSbx extends OdmdBuildUserAuth {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     ownerEmail?: string | undefined;
 

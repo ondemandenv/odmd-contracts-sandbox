@@ -21,7 +21,7 @@ export class EvBusSrcRefProducer extends OdmdCrossRefProducer<CoffeeShopFoundati
 }
 
 export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     constructor(owner: OdmdBuild<OdmdEnverCdk>, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -37,8 +37,8 @@ export class CoffeeShopFoundationEnver extends OdmdEnverCdk {
 }
 
 export class CoffeeShopFoundationCdk extends OdmdBuild<OdmdEnverCdk> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     protected _envers: Array<CoffeeShopFoundationEnver>;
     get envers(): Array<CoffeeShopFoundationEnver> {
         return this._envers;

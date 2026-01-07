@@ -6,7 +6,7 @@ import {
 import * as path from "path";
 
 class IPAM_WEST1_LE extends IPAM_AB {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     constructor(owner: OdmdBuildNetworking, rev: SRC_Rev_REF) {
         super(owner, 'us-west-1', rev);
@@ -20,7 +20,7 @@ class IPAM_WEST1_LE extends IPAM_AB {
 
 
 class IPAM_WEST2_LE extends IPAM_AB {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     constructor(owner: OdmdBuildNtSbx, rev: SRC_Rev_REF) {
         super(owner, 'us-west-2', rev);
@@ -33,8 +33,8 @@ class IPAM_WEST2_LE extends IPAM_AB {
 
 
 export class OdmdBuildNtSbx extends OdmdBuildNetworking {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     ipam_west2_le: IPAM_WEST2_LE;
 

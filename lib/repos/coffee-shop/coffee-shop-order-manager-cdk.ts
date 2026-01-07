@@ -9,7 +9,7 @@ import {CoffeeShopFoundationEnver} from "./coffee-shop-foundation-cdk";
 import * as path from "path"
 
 export class CoffeeShopOrderManagerEnver extends OdmdEnverCdk {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'ORDER_MANAGER_OVERVIEW.md')
     constructor(owner: CoffeeShopOrderManagerCdk, targetAWSAccountID: string,
                 targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
@@ -30,8 +30,8 @@ export class CoffeeShopOrderManagerEnver extends OdmdEnverCdk {
 }
 
 export class CoffeeShopOrderManagerCdk extends OdmdBuild<OdmdEnverCdk> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'ORDER_MANAGER_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'ORDER_MANAGER_OVERVIEW.md')
     protected _envers: Array<CoffeeShopOrderManagerEnver>;
     get envers(): Array<CoffeeShopOrderManagerEnver> {
         return this._envers;

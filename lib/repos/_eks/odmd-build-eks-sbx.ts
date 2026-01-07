@@ -9,7 +9,7 @@ import * as path from "path";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
 
 export class EksClusterEnverSbx extends OdmdEnverEksCluster implements WithVpc {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     ephemeral: boolean = false
     readonly vpcConfig: OdmdVpc
     readonly clusterName: string
@@ -31,8 +31,8 @@ export class EksClusterEnverSbx extends OdmdEnverEksCluster implements WithVpc {
 
 
 export class OdmdBuildEksSbx extends OdmdBuild<OdmdEnverCdk> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     protected initializeEnvers(): void {
         this._envers = [new EksClusterEnverSbx(this, 'odmd-sbx-eks-cluster-usw10')]

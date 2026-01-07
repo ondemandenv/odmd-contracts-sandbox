@@ -11,7 +11,7 @@ import {AnyOdmdEnVer} from "@ondemandenv.dev/contracts-lib-base";
 import * as path from "path"
 
 export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     builtImgNameToRepoGrants: {
         [imgName: string]: [grantee: IGrantable | OdmdCrossRefConsumer<OdmdEnverCtnImg, AnyOdmdEnVer>, ...actions: string[]][];
     };
@@ -62,8 +62,8 @@ export class SampleSpringOpenApi3ImgEnver extends OdmdEnverCtnImg {
 
 
 export class SampleSpringOpenApi3Img extends OdmdBuild<OdmdEnverCtnImg> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     protected initializeEnvers(): void {
         this._theOne = new SampleSpringOpenApi3ImgEnver(this, this.contracts.accounts.workspace1,
             'us-west-1', new SRC_Rev_REF('b', 'master')

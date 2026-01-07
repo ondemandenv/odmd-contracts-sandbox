@@ -7,11 +7,11 @@ import {
     SRC_Rev_REF
 } from "@ondemandenv.dev/contracts-lib-base";
 import {OndemandContractsSandbox} from "../../OndemandContractsSandbox";
-import {OdmdBuildEksSbx, EksClusterEnverSbx} from "../../repos/_eks/odmd-build-eks-sbx";
+import {OdmdBuildEksSbx, EksClusterEnverSbx} from "../_eks/odmd-build-eks-sbx";
 import * as path from "path"
 
 export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCtlThruCentral {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     constructor(owner: SampleSpringOpenApi3Cdk, targetAWSAccountID: string, targetAWSRegion: string, targetRevision: SRC_Rev_REF) {
         super(owner, targetAWSAccountID, targetAWSRegion, targetRevision);
         this.appImgRepoRef = new OdmdCrossRefConsumer(this, 'appImgRefProducer',
@@ -46,8 +46,8 @@ export class SampleSpringOpenApi3CdkEnver extends OdmdEnverCdk implements KubeCt
 }
 
 export class SampleSpringOpenApi3Cdk extends OdmdBuild<OdmdEnverCdk> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 
     protected _envers: Array<SampleSpringOpenApi3CdkEnver>
     get envers(): Array<SampleSpringOpenApi3CdkEnver> {

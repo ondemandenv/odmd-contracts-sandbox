@@ -8,12 +8,12 @@ import {AccountsSbx, GithubReposSbx, OndemandContractsSandbox} from "../../Ondem
 import * as path from "path";
 
 class OdmdEnverContractsLibSeed extends OdmdEnverContractsLib {
-    readonly enverContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly enverContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
 }
 
 export class OdmdBuildContractsSbx extends OdmdBuildContractsLib<AccountsSbx, GithubReposSbx> {
-    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'placeholder.md')
-    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'placeholder.md')
+    readonly serviceContextMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
+    readonly serviceOverviewMD = path.resolve(__dirname, 'docs', 'SERVICE_OVERVIEW.md')
     protected _envers: OdmdEnverContractsLib[];
     get envers(): OdmdEnverContractsLib[] {
         return this._envers;
