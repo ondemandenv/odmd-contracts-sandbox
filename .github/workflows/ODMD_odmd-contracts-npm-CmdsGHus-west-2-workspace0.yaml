@@ -1,0 +1,77 @@
+#ODMD GENERATED WORKFLOW, DO NOT change unless you are sure.
+
+name: ODMD_odmd-contracts-npm-CmdsGHus-west-2-workspace0
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        type: string
+        required: false
+        default: ''
+        description: 'additional message'
+jobs:
+  odmd_job:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Assuming other steps need this
+      id-token: write # For AWS role assumption
+      
+      actions: read
+      checks: read
+      deployments: read
+      issues: read
+      packages: write
+      pull-requests: read
+      statuses: read
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: 'arn:aws:iam::975050243618:role/odmd-contracts-npm/odmd-contracts-npm-us-west-2975050243618-buildRole'
+          aws-region: us-west-2
+
+      - uses: ondemandenv/wflact-resolvEnvars@ondemandenv
+        with:
+          trigger_message: ${{github.event.inputs.message}}
+        env:
+          ODMD_awsRegion: us-west-2
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: odmd-contracts-npm
+          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_west_2_workspace0'] }}
+      
+      - name: run enver local script
+        run: |
+          set -ex
+          
+          if [[ -n "${{ env.ODMD_work_dir }}" ]]; then
+            cd "${{ env.ODMD_work_dir }}"
+          else
+            echo "ODMD_work_dir is empty, staying in current directory"
+            ls -ltarh
+          fi
+          
+          pwd
+          env | grep -i ^ODMD
+          
+          if [ -f ${{ env.ODMD_buildScript }} ]; then
+            chmod +x ${{ env.ODMD_buildScript }}
+            ./${{ env.ODMD_buildScript }}
+          else
+            echo "${{ env.ODMD_buildScript }} does not exist, continue ..."
+          fi
+          
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: odmd-contracts-npm
+          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_west_2_workspace0'] }}      
+          
+      - uses: ondemandenv/wflact-buildProduces@ondemandenv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ODMD_buildId: odmd-contracts-npm
+          ODMD_SECRETS: ${{ secrets['ODMD_SECRETS_ODMD_odmd_contracts_npm_CmdsGHus_west_2_workspace0'] }}
+
+#
