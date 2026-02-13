@@ -41,6 +41,11 @@ export class OdmdBuildCloudflareInfra extends OdmdBuild<OdmdEnverCloudflareInfra
         return this._pubanatomyOrg;
     }
 
+    private _odmdUk: OdmdEnverCloudflareInfra;
+    get odmdUk(): OdmdEnverCloudflareInfra {
+        return this._odmdUk;
+    }
+
     protected initializeEnvers(): void {
         this._newidClick = new OdmdEnverCloudflareInfra(
             this, this.contracts.accounts.workspace1, 'us-west-2',
@@ -63,7 +68,14 @@ export class OdmdBuildCloudflareInfra extends OdmdBuild<OdmdEnverCloudflareInfra
             {emailRouting: true}
         );
 
-        this._envers = [this._newidClick, this._ondemandenvDev, this._pubanatomyOrg];
+        this._odmdUk = new OdmdEnverCloudflareInfra(
+            this, this.contracts.accounts.workspace1, 'us-west-2',
+            new SRC_Rev_REF('b', 'odmd-uk'),
+            'odmd.uk', 'CLOUDFLARE_ZONE_ID_ODMD_UK',
+            {emailRouting: true}
+        );
+
+        this._envers = [this._newidClick, this._ondemandenvDev, this._pubanatomyOrg, this._odmdUk];
     }
 
     ownerEmail?: string | undefined;
