@@ -6,6 +6,7 @@ import {CoffeeShopOrderManagerCdk} from "./repos/coffee-shop/coffee-shop-order-m
 import {App} from "aws-cdk-lib";
 import {
     AccountsCentralView,
+    AccountToOdmdHostedZoneIdName,
     GithubReposCentralView,
     GithubRepo,
     OndemandContracts, OdmdBuildNetworking
@@ -83,6 +84,18 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
 
     get networking(): OdmdBuildNtSbx {
         return this._networking! as OdmdBuildNtSbx
+    }
+
+    get subDomain(): string | undefined {
+        return 'sbx'
+    }
+
+    get accountToOdmdHostedZone(): AccountToOdmdHostedZoneIdName {
+        return {
+            central: ['*', '*.sbx.odmd.uk'],
+            workspace0: ['*', 'ws0.sbx.odmd.uk'],
+            // workspace1 is sbx-specific (not in AccountsCentralView) and will be added once the zone is provisioned
+        }
     }
 
     private _githubRepos: GithubReposSbx
