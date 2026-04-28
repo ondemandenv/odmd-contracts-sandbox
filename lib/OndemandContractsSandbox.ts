@@ -87,8 +87,13 @@ export class OndemandContractsSandbox extends OndemandContracts<AccountsSbx, Git
     }
 
     get dnsConfig(): DnsConfig {
-        // Everything auto-derived: sbx.odmd.uk (center — cf-delegated), ws0.sbx.odmd.uk, etc.
-        return {subDomain: 'sbx'}
+        // Center zone (sbx.odmd.uk) is Cloudflare-delegated and manually created; id below is
+        // read by consumers that need HostedZone.fromHostedZoneAttributes at synth time.
+        // Workspace accounts auto-derive (ws0.sbx.odmd.uk, etc.) — no entries needed.
+        return {
+            subDomain: 'sbx',
+            hostedZoneId: 'Z09294613CQXNMR9N5T26',
+        }
     }
 
     private _githubRepos: GithubReposSbx
