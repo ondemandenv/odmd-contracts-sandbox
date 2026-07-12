@@ -1,1 +1,8 @@
-../opencode.json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "./AGENTS.md",
+    "./node_modules/@ondemandenv.dev/contracts-lib-base/.odmd/*.md",
+    "./lib/repos/_contracts/docs/*.md"
+  ]
+}
