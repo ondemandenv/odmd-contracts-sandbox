@@ -11,8 +11,7 @@
   "files": [
     "dist",
     "package.json",
-    "src",
-    ".odmd-kk"
+    "src"
   ],
   "dependencies": {
     "@ondemandenv.dev/contracts-lib-base": "0.1.14",
