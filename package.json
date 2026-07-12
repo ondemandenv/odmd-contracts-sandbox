@@ -14,7 +14,7 @@
     "src"
   ],
   "dependencies": {
-    "@ondemandenv.dev/contracts-lib-base": "0.1.14",
+    "@ondemandenv.dev/contracts-lib-base": "0.1.15",
     "aws-cdk-lib": "2.250.0"
   },
   "devDependencies": {
