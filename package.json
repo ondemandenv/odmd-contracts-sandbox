@@ -1,7 +1,7 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
   "repository": "https://github.com/ondemandenv/odmd-contracts-sandbox.git",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,8 +14,8 @@
     "src"
   ],
   "dependencies": {
-    "@ondemandenv.dev/contracts-lib-base": "0.1.15",
-    "aws-cdk-lib": "2.250.0"
+    "@ondemandenv.dev/contracts-lib-base": "0.1.17",
+    "aws-cdk-lib": "2.273.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
@@ -32,7 +32,7 @@
     "typescript": "~5.9.3"
   },
   "peerDependencies": {
-    "aws-cdk-lib": "2.250.0",
+    "aws-cdk-lib": "2.273.0",
     "constructs": "^10.0.0"
   },
   "scripts": {
