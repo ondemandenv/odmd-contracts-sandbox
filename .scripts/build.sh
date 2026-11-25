@@ -9,7 +9,7 @@ cat .npmrc
 
 PKG_NAME=$(jq -r '.name' package.json) && test "$PKG_NAME" != $ODMD_contractsLibPkgName || echo $PKG_NAME is good
 
-npm install && tsc --build
+npm install && npm run build
 #npm run test
 
 # >>>>
