@@ -1,7 +1,7 @@
 {
   "name": "@ondemandenv/odmd-contracts-sandbox",
   "repository": "https://github.com/ondemandenv/odmd-contracts-sandbox.git",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
     "src"
   ],
   "dependencies": {
-    "@ondemandenv.dev/contracts-lib-base": "0.1.17",
+    "@ondemandenv.dev/contracts-lib-base": "0.1.18",
     "aws-cdk-lib": "2.273.0"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
   "scripts": {
     "gen-exports": "ts-node .scripts/generate-exports.ts",
     "prebuild": "npm run gen-exports",
-    "build": "tsc --build && cpx \"lib/repos/**/docs/**/*\" dist/lib/repos || true",
+    "build": "tsc --build && for d in lib/repos/*/docs; do mkdir -p \"dist/$d\" && cp -r \"$d\"/. \"dist/$d\"/; done",
     "watch": "tsc --build -w",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "test": "npm run clean && npm run build &&  cross-env ODMD_rev_ref=b..main CDK_DEFAULT_ACCOUNT=123 CDK_DEFAULT_REGION=us-west-1 CDK_CLI_VERSION=2.164.1  jest  --verbose --detectOpenHandles --forceExit",
